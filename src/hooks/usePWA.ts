@@ -2,11 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useAppStore } from '@/store';
 
-interface PWAPrompt {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
-
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
   readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
@@ -25,7 +20,7 @@ export const usePWA = () => {
     setIsStandalone(window.matchMedia('(display-mode: standalone)').matches);
     
     // Verificar se já está instalado
-    setIsInstalled('serviceWorker' in navigator && 'PushManager' in window);
+    setIsInstalled('serviceWorker' in navigator);
 
     // Listener para evento de instalação
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -119,7 +114,7 @@ export const usePWA = () => {
   };
 };
 
-// Hook para notificações push
+// Hook para notificações push simplificado
 export const usePushNotifications = () => {
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
