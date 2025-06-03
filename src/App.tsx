@@ -9,6 +9,11 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import ServidorDashboard from "./pages/dashboard/ServidorDashboard";
+import PsicologoDashboard from "./pages/dashboard/PsicologoDashboard";
+import MedicoDashboard from "./pages/dashboard/MedicoDashboard";
+import AdminDashboard from "./pages/dashboard/AdminDashboard";
+import Agendamentos from "./pages/Agendamentos";
+import Termometro from "./pages/Termometro";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 
@@ -41,28 +46,32 @@ const App: React.FC = () => {
             
             <Route path="/dashboard/psicologo" element={
               <Layout userType="psicologo">
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Dashboard do Psicólogo</h1>
-                  <p className="text-gray-600">Em desenvolvimento...</p>
-                </div>
+                <PsicologoDashboard />
               </Layout>
             } />
             
             <Route path="/dashboard/medico" element={
               <Layout userType="medico">
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Dashboard do Médico</h1>
-                  <p className="text-gray-600">Em desenvolvimento...</p>
-                </div>
+                <MedicoDashboard />
               </Layout>
             } />
             
             <Route path="/dashboard/admin" element={
               <Layout userType="admin">
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold">Dashboard Administrativo</h1>
-                  <p className="text-gray-600">Em desenvolvimento...</p>
-                </div>
+                <AdminDashboard />
+              </Layout>
+            } />
+
+            {/* Shared Pages with Layout */}
+            <Route path="/agendamentos" element={
+              <Layout userType="servidor">
+                <Agendamentos />
+              </Layout>
+            } />
+
+            <Route path="/termometro" element={
+              <Layout userType="servidor">
+                <Termometro />
               </Layout>
             } />
 
