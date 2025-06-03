@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Calendar, WhatsApp } from "lucide-react";
+import { MessageSquare, Calendar, MessageCircle } from "lucide-react";
 
 const Contact = () => {
   return (
@@ -55,7 +55,7 @@ const Contact = () => {
           <Card className="bg-white border-2 border-gray-100 hover:shadow-lg transition-all duration-300 hover:scale-105">
             <CardHeader className="text-center">
               <div className="w-16 h-16 bg-accent rounded-full mx-auto mb-4 flex items-center justify-center">
-                <WhatsApp className="w-8 h-8 text-white" />
+                <MessageCircle className="w-8 h-8 text-white" />
               </div>
               <CardTitle className="text-xl">WhatsApp</CardTitle>
             </CardHeader>
