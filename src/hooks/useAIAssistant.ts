@@ -1,8 +1,5 @@
 
-import React from 'react';
-import { Bot, AlertTriangle, Clock, Heart } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Bot, AlertTriangle, Heart } from 'lucide-react';
 
 interface AIMessage {
   id: string;
@@ -12,12 +9,12 @@ interface AIMessage {
   suggestions?: string[];
 }
 
-interface AIAssistantProps {
+interface UseAIAssistantProps {
   onEscalate: () => void;
   onSuggestion: (suggestion: string) => void;
 }
 
-export const AIAssistant: React.FC<AIAssistantProps> = ({ onEscalate, onSuggestion }) => {
+export const useAIAssistant = ({ onEscalate, onSuggestion }: UseAIAssistantProps) => {
   const generateAIResponse = (userMessage: string): AIMessage => {
     // Simulação da análise de sentimentos
     const urgentKeywords = ['suicídio', 'morte', 'socorro', 'emergência', 'desespero', 'não aguento'];
@@ -99,5 +96,3 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ onEscalate, onSuggesti
 
   return { generateAIResponse, getSentimentIcon, getSentimentColor };
 };
-
-export default AIAssistant;

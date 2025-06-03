@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, Send, Phone, Video, MoreVertical, Clock, Users, Bot, Sparkles, AlertTriangle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
-import { AIAssistant } from "@/components/chat/AIAssistant";
+import { useAIAssistant } from "@/hooks/useAIAssistant";
 import { SentimentAnalysis } from "@/components/chat/SentimentAnalysis";
 import { EscalationSystem } from "@/components/chat/EscalationSystem";
 
@@ -44,7 +44,7 @@ const ChatViva = () => {
   const [aiEnabled, setAiEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  const { generateAIResponse, getSentimentIcon, getSentimentColor } = AIAssistant({
+  const { generateAIResponse, getSentimentIcon, getSentimentColor } = useAIAssistant({
     onEscalate: () => setShowEscalation(true),
     onSuggestion: (suggestion) => setMessage(suggestion)
   });
