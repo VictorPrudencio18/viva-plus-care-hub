@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import do sistema de design terapêutico */
+@import './design-system/colors.css';
+@import './design-system/animations/therapeutic-animations.css';
+
 @layer base {
   :root {
     --background: 255 255 255;
@@ -91,16 +95,244 @@
   }
 
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-background text-foreground font-inter antialiased;
+    /* Suavização de fontes para melhor legibilidade */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Configurações terapêuticas */
+    line-height: 1.6; /* Altura de linha confortável */
+    letter-spacing: 0.01em; /* Espaçamento sutil */
+  }
+
+  /* Headings com hierarquia visual terapêutica */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-therapeutic);
+    line-height: 1.4;
+    font-weight: 600;
+    color: var(--color-neutral-900);
+  }
+
+  h1 { 
+    font-size: 2.5rem; 
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  
+  h2 { 
+    font-size: 2rem; 
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  
+  h3 { 
+    font-size: 1.5rem; 
+    margin-bottom: 1rem;
+  }
+
+  /* Links com estados acessíveis */
+  a {
+    color: var(--color-primary-600);
+    text-decoration: none;
+    transition: all 0.2s ease-out;
+  }
+
+  a:hover {
+    color: var(--color-primary-700);
+    text-decoration: underline;
+  }
+
+  a:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Inputs com design terapêutico */
+  input, textarea, select {
+    font-family: inherit;
+    transition: all 0.2s ease-out;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary-200);
+    border-color: var(--color-primary-500);
+  }
+
+  /* Scrollbar customizada */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-neutral-100);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-300);
+    border-radius: 4px;
+    transition: background 0.2s ease-out;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-400);
+  }
+
+  /* Seleção de texto com cores terapêuticas */
+  ::selection {
+    background: var(--color-primary-200);
+    color: var(--color-primary-900);
+  }
+
+  ::-moz-selection {
+    background: var(--color-primary-200);
+    color: var(--color-primary-900);
   }
 }
 
+/* Gradientes utilitários */
 .gradient-bg {
-  background: linear-gradient(135deg, #0066CC 0%, #00B3A6 50%, #4ADE80 100%);
+  background: var(--gradient-wellness);
 }
 
 .glass-effect {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Novos gradientes terapêuticos */
+.bg-gradient-therapeutic {
+  background: var(--gradient-therapeutic);
+}
+
+.bg-gradient-calm {
+  background: var(--gradient-calm);
+}
+
+.bg-gradient-focus {
+  background: var(--gradient-focus);
+}
+
+.bg-gradient-energy {
+  background: var(--gradient-energy);
+}
+
+/* Estados de hover melhorados */
+.hover-therapeutic {
+  transition: all var(--duration-therapeutic) var(--easing-therapeutic);
+}
+
+.hover-therapeutic:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-therapeutic);
+}
+
+/* Classes de utilidade para acessibilidade */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Reduzir movimento para usuários sensíveis */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Alto contraste para acessibilidade */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary-500: #000080;
+    --color-secondary-500: #006400;
+    --color-accent-500: #008000;
+  }
+}
+
+/* Modo escuro com cores terapêuticas */
+@media (prefers-color-scheme: dark) {
+  .dark-therapeutic {
+    --color-primary-500: #4da6ff;
+    --color-secondary-500: #4dffc0;
+    --color-accent-500: #86efac;
+    --gradient-therapeutic: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+  }
+}
+
+/* Animações de entrada para acessibilidade */
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estados de loading acessíveis */
+.loading-state {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.loading-state::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--color-primary-200);
+  border-top-color: var(--color-primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Melhorias de performance */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
