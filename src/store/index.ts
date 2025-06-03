@@ -2,7 +2,6 @@
 import React from 'react';
 import { create } from 'zustand';
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
-import { immer } from 'zustand/middleware/immer';
 import type { EmotionalState, AccessibilityConfig } from '@/design-system';
 
 // Estado do usuário e autenticação
@@ -73,12 +72,12 @@ export const useUserStore = create<UserState>()(
   )
 );
 
-// Store da aplicação com múltiplos middlewares
+// Store da aplicação com múltiplos middlewares (sem immer)
 export const useAppStore = create<AppState & AppActions>()(
   devtools(
     subscribeWithSelector(
       persist(
-        immer((set, get) => ({
+        (set, get) => ({
           // Estado inicial
           theme: 'auto',
           sidebarOpen: false,
@@ -98,58 +97,48 @@ export const useAppStore = create<AppState & AppActions>()(
           lastSync: Date.now(),
 
           // Ações
-          setTheme: (theme) => set((state) => {
-            state.theme = theme;
-          }),
+          setTheme: (theme) => set({ theme }),
           
-          toggleSidebar: () => set((state) => {
-            state.sidebarOpen = !state.sidebarOpen;
-          }),
+          toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
           
-          setSidebarOpen: (open) => set((state) => {
-            state.sidebarOpen = open;
-          }),
+          setSidebarOpen: (open) => set({ sidebarOpen: open }),
           
           addNotification: (notification) => set((state) => {
-            state.notifications.unshift({
+            const newNotification = {
               ...notification,
               id: crypto.randomUUID(),
               timestamp: Date.now(),
               read: false,
-            });
+            };
+            const updatedNotifications = [newNotification, ...state.notifications];
             // Manter apenas as últimas 50 notificações
-            if (state.notifications.length > 50) {
-              state.notifications = state.notifications.slice(0, 50);
-            }
+            return {
+              notifications: updatedNotifications.length > 50 
+                ? updatedNotifications.slice(0, 50) 
+                : updatedNotifications
+            };
           }),
           
-          markNotificationRead: (id) => set((state) => {
-            const notification = state.notifications.find(n => n.id === id);
-            if (notification) {
-              notification.read = true;
-            }
-          }),
+          markNotificationRead: (id) => set((state) => ({
+            notifications: state.notifications.map(n => 
+              n.id === id ? { ...n, read: true } : n
+            )
+          })),
           
-          clearNotifications: () => set((state) => {
-            state.notifications = [];
-          }),
+          clearNotifications: () => set({ notifications: [] }),
           
-          updateAccessibility: (config) => set((state) => {
-            Object.assign(state.accessibility, config);
-          }),
+          updateAccessibility: (config) => set((state) => ({
+            accessibility: { ...state.accessibility, ...config }
+          })),
           
-          updateEmotionalState: (emotionalState) => set((state) => {
-            Object.assign(state.emotionalState, emotionalState);
-          }),
+          updateEmotionalState: (emotionalState) => set((state) => ({
+            emotionalState: { ...state.emotionalState, ...emotionalState }
+          })),
           
-          setOnlineStatus: (status) => set((state) => {
-            state.isOnline = status;
-          }),
+          setOnlineStatus: (status) => set({ isOnline: status }),
           
-          updateLastSync: () => set((state) => {
-            state.lastSync = Date.now();
-          }),
-        })),
+          updateLastSync: () => set({ lastSync: Date.now() }),
+        }),
         {
           name: 'viva-plus-app',
           partialize: (state) => ({
