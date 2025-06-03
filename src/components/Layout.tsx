@@ -1,5 +1,4 @@
 
-import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { 
   Menu, 
@@ -12,9 +11,14 @@ import {
   LogOut,
   Settings,
   Bell,
-  FileText
+  FileText,
+  Wifi,
+  WifiOff
 } from "lucide-react";
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAppStore, useUserStore } from '@/store';
+import { useNetworkStatus } from '@/store';
+import { Badge } from '@/components/ui/badge';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,9 +26,20 @@ interface LayoutProps {
 }
 
 const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const isOnline = useNetworkStatus();
+  
+  const { 
+    sidebarOpen, 
+    setSidebarOpen, 
+    notifications,
+    markNotificationRead 
+  } = useAppStore();
+  
+  const { logout } = useUserStore();
+
+  const unreadNotifications = notifications.filter(n => !n.read).length;
 
   const getMenuItems = () => {
     const commonItems = [
@@ -62,6 +77,7 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
   const menuItems = getMenuItems();
 
   const handleLogout = () => {
+    logout();
     navigate('/');
   };
 
@@ -78,6 +94,11 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
               <span className="text-white font-bold text-lg">V+</span>
             </div>
             <span className="text-xl font-bold text-gray-900">Viva+</span>
+            {!isOnline && (
+              <Badge variant="destructive" className="text-xs">
+                Offline
+              </Badge>
+            )}
           </div>
           <Button
             variant="ghost"
@@ -126,18 +147,40 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
       <div className="flex-1 lg:ml-0">
         {/* Top Bar */}
         <div className="bg-white shadow-sm border-b h-16 flex items-center justify-between px-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="w-5 h-5" />
-          </Button>
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="lg:hidden"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+            
+            {/* Status de conectividade */}
+            <div className="flex items-center space-x-2">
+              {isOnline ? (
+                <Wifi className="w-4 h-4 text-green-500" />
+              ) : (
+                <WifiOff className="w-4 h-4 text-red-500" />
+              )}
+              <span className="text-sm text-gray-600 hidden sm:inline">
+                {isOnline ? 'Online' : 'Offline'}
+              </span>
+            </div>
+          </div>
 
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="relative">
               <Bell className="w-5 h-5" />
+              {unreadNotifications > 0 && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-1 -right-1 w-5 h-5 text-xs p-0 flex items-center justify-center"
+                >
+                  {unreadNotifications}
+                </Badge>
+              )}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate('/perfil')}>
               <User className="w-5 h-5" />

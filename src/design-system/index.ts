@@ -15,6 +15,9 @@ export {
   type AnimationConfig 
 } from './hooks/useTherapeuticAnimations';
 
+// Importação dos tokens para usar nas interfaces
+import designTokens from './tokens';
+
 // Tipos de interface terapêutica
 export interface TherapeuticTheme {
   colors: typeof designTokens.colors;

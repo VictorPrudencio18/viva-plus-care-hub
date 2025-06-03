@@ -8,25 +8,69 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
-import ServidorDashboard from "./pages/dashboard/ServidorDashboard";
-import PsicologoDashboard from "./pages/dashboard/PsicologoDashboard";
-import MedicoDashboard from "./pages/dashboard/MedicoDashboard";
-import AdminDashboard from "./pages/dashboard/AdminDashboard";
-import Agendamentos from "./pages/Agendamentos";
-import Termometro from "./pages/Termometro";
-import ChatViva from "./pages/ChatViva";
-import Prontuarios from "./pages/Prontuarios";
-import Perfil from "./pages/Perfil";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
+import { useAppStore } from './store';
+import { usePWA } from './hooks/usePWA';
+
+// Lazy-loaded components
+import {
+  ServidorDashboard,
+  PsicologoDashboard,
+  MedicoDashboard,
+  AdminDashboard,
+  Agendamentos,
+  Termometro,
+  ChatViva,
+  Prontuarios,
+  Perfil,
+} from './components/LazyPages';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60 * 1000,
+      retry: (failureCount, error) => {
+        // Não fazer retry em caso de erro de rede quando offline
+        if (!navigator.onLine) return false;
+        return failureCount < 3;
+      },
     },
   },
 });
+
+// Componente para monitoramento PWA
+const PWAManager: React.FC = () => {
+  const { isStandalone, canInstall, updateAvailable } = usePWA();
+  const { addNotification } = useAppStore();
+
+  React.useEffect(() => {
+    if (updateAvailable) {
+      addNotification({
+        type: 'info',
+        title: 'Atualização Disponível',
+        message: 'Uma nova versão está disponível. Recarregue para atualizar.',
+      });
+    }
+  }, [updateAvailable, addNotification]);
+
+  React.useEffect(() => {
+    // Mostrar dica de instalação após um tempo
+    if (canInstall && !isStandalone) {
+      const timer = setTimeout(() => {
+        addNotification({
+          type: 'info',
+          title: 'Instalar App',
+          message: 'Instale o Viva+ para uma experiência melhor!',
+        });
+      }, 30000); // 30 segundos
+
+      return () => clearTimeout(timer);
+    }
+  }, [canInstall, isStandalone, addNotification]);
+
+  return null;
+};
 
 const App: React.FC = () => {
   return (
@@ -34,13 +78,14 @@ const App: React.FC = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <PWAManager />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/cadastro" element={<Cadastro />} />
             
-            {/* Dashboard Routes with Layout */}
+            {/* Dashboard Routes with Layout and Lazy Loading */}
             <Route path="/dashboard/servidor" element={
               <Layout userType="servidor">
                 <ServidorDashboard />
@@ -65,7 +110,7 @@ const App: React.FC = () => {
               </Layout>
             } />
 
-            {/* Shared Pages with Layout */}
+            {/* Shared Pages with Layout and Lazy Loading */}
             <Route path="/agendamentos" element={
               <Layout userType="servidor">
                 <Agendamentos />
