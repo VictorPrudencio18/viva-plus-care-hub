@@ -39,16 +39,16 @@ export const LazyPerfil = React.lazy(() =>
   import('../pages/Perfil')
 );
 
-// HOC para wrapping automático com LazyLoader
-export const withLazyLoader = <P extends object>(
-  Component: React.ComponentType<P>,
+// HOC simplificado para wrapping automático com LazyLoader
+export const withLazyLoader = (
+  Component: React.ComponentType<any>,
   fallback?: React.ReactNode
 ) => {
-  return React.forwardRef<any, P>((props, ref) => (
+  return (props: any) => (
     <LazyLoader fallback={fallback}>
-      <Component {...props} ref={ref} />
+      <Component {...props} />
     </LazyLoader>
-  ));
+  );
 };
 
 // Componentes pré-configurados com LazyLoader

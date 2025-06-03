@@ -1,79 +1,111 @@
 
 /// <reference lib="webworker" />
-
-import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
-import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate, CacheFirst, NetworkFirst } from 'workbox-strategies';
-import { ExpirationPlugin } from 'workbox-expiration';
+/// <reference path="../types/workbox.d.ts" />
 
 declare const self: ServiceWorkerGlobalScope;
 
-// Limpar caches antigos
-cleanupOutdatedCaches();
+// Cache names
+const CACHE_NAME = 'viva-plus-v1';
+const API_CACHE = 'viva-plus-api-v1';
+const STATIC_CACHE = 'viva-plus-static-v1';
 
-// Precache de recursos estáticos
-precacheAndRoute(self.__WB_MANIFEST);
+// Install event
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll([
+        '/',
+        '/manifest.json',
+        '/favicon.ico'
+      ]);
+    })
+  );
+  self.skipWaiting();
+});
 
-// Cache para API calls - Network First para dados críticos
-registerRoute(
-  ({ url }) => url.pathname.startsWith('/api/'),
-  new NetworkFirst({
-    cacheName: 'api-cache',
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 100,
-        maxAgeSeconds: 60 * 60 * 24, // 24 horas
-      }),
-    ],
-  })
-);
+// Activate event
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME && cacheName !== API_CACHE && cacheName !== STATIC_CACHE) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
+});
 
-// Cache para recursos estáticos - Cache First
-registerRoute(
-  ({ request }) => 
-    request.destination === 'style' ||
-    request.destination === 'script' ||
-    request.destination === 'font',
-  new CacheFirst({
-    cacheName: 'static-resources',
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 60,
-        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
-      }),
-    ],
-  })
-);
+// Fetch event - Network first for API, Cache first for static assets
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
 
-// Cache para imagens - Stale While Revalidate
-registerRoute(
-  ({ request }) => request.destination === 'image',
-  new StaleWhileRevalidate({
-    cacheName: 'images',
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 60,
-        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
-      }),
-    ],
-  })
-);
+  // API requests - Network First
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(API_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          return caches.match(request);
+        })
+    );
+    return;
+  }
 
-// Cache para navegação - Network First com fallback
-registerRoute(
-  ({ request }) => request.mode === 'navigate',
-  new NetworkFirst({
-    cacheName: 'pages',
-    plugins: [
-      new ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 60 * 60 * 24 * 7, // 7 dias
-      }),
-    ],
-  })
-);
+  // Static assets - Cache First
+  if (request.destination === 'image' || 
+      request.destination === 'style' || 
+      request.destination === 'script') {
+    event.respondWith(
+      caches.match(request).then((response) => {
+        if (response) {
+          return response;
+        }
+        return fetch(request).then((response) => {
+          if (response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(STATIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        });
+      })
+    );
+    return;
+  }
 
-// Background sync para dados offline
+  // Navigation requests - Network first with cache fallback
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() => {
+        return caches.match('/') || caches.match(request);
+      })
+    );
+    return;
+  }
+
+  // Default: try network first, then cache
+  event.respondWith(
+    fetch(request).catch(() => {
+      return caches.match(request);
+    })
+  );
+});
+
+// Background sync
 self.addEventListener('sync', (event) => {
   if (event.tag === 'background-sync') {
     event.waitUntil(doBackgroundSync());
@@ -81,34 +113,15 @@ self.addEventListener('sync', (event) => {
 });
 
 async function doBackgroundSync() {
-  // Implementar sincronização de dados quando voltar online
   try {
-    const pendingData = await getStoredPendingData();
-    for (const data of pendingData) {
-      await syncDataToServer(data);
-    }
-    await clearPendingData();
+    console.log('Background sync started');
+    // Implementar sincronização de dados quando voltar online
   } catch (error) {
     console.error('Background sync failed:', error);
   }
 }
 
-async function getStoredPendingData() {
-  // Implementar recuperação de dados pendentes do IndexedDB
-  return [];
-}
-
-async function syncDataToServer(data: any) {
-  // Implementar sincronização com servidor
-  console.log('Syncing data:', data);
-}
-
-async function clearPendingData() {
-  // Implementar limpeza de dados sincronizados
-  console.log('Clearing synced data');
-}
-
-// Notificações push
+// Push notifications
 self.addEventListener('push', (event) => {
   if (event.data) {
     const data = event.data.json();
@@ -123,7 +136,7 @@ self.addEventListener('push', (event) => {
   }
 });
 
-// Handle notification clicks
+// Notification click handler
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   
