@@ -14,6 +14,9 @@ import MedicoDashboard from "./pages/dashboard/MedicoDashboard";
 import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import Agendamentos from "./pages/Agendamentos";
 import Termometro from "./pages/Termometro";
+import ChatViva from "./pages/ChatViva";
+import Prontuarios from "./pages/Prontuarios";
+import Perfil from "./pages/Perfil";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 
@@ -72,6 +75,24 @@ const App: React.FC = () => {
             <Route path="/termometro" element={
               <Layout userType="servidor">
                 <Termometro />
+              </Layout>
+            } />
+
+            <Route path="/chat" element={
+              <Layout userType="servidor">
+                <ChatViva />
+              </Layout>
+            } />
+
+            <Route path="/prontuarios" element={
+              <Layout userType="psicologo">
+                <Prontuarios />
+              </Layout>
+            } />
+
+            <Route path="/perfil" element={
+              <Layout userType="servidor">
+                <Perfil />
               </Layout>
             } />
 

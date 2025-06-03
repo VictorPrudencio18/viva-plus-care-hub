@@ -11,7 +11,8 @@ import {
   User, 
   LogOut,
   Settings,
-  Bell
+  Bell,
+  FileText
 } from "lucide-react";
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -44,7 +45,7 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
         return [
           ...commonItems,
           { icon: User, label: 'Pacientes', path: '/pacientes' },
-          { icon: Heart, label: 'Prontuários', path: '/prontuarios' },
+          { icon: FileText, label: 'Prontuários', path: '/prontuarios' },
           { icon: Settings, label: 'Configurações', path: '/configuracoes' },
         ];
       case 'admin':
@@ -138,7 +139,7 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
             <Button variant="ghost" size="sm">
               <Bell className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={() => navigate('/perfil')}>
               <User className="w-5 h-5" />
             </Button>
           </div>
