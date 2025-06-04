@@ -12,6 +12,10 @@ import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import { useAppStore } from './store';
 import { usePWA } from './hooks/usePWA';
+import { AuthProvider } from './contexts/AuthContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { NotificationContainer } from './components/NotificationSystem';
+import { LoadingPage } from './components/LoadingStates';
 
 // Lazy-loaded components
 import {
@@ -35,6 +39,11 @@ const queryClient = new QueryClient({
         if (!navigator.onLine) return false;
         return failureCount < 3;
       },
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+    },
+    mutations: {
+      retry: false,
     },
   },
 });
@@ -50,6 +59,10 @@ const PWAManager: React.FC = () => {
         type: 'info',
         title: 'Atualização Disponível',
         message: 'Uma nova versão está disponível. Recarregue para atualizar.',
+        action: {
+          label: 'Atualizar',
+          onClick: () => window.location.reload(),
+        },
       });
     }
   }, [updateAvailable, addNotification]);
@@ -62,6 +75,7 @@ const PWAManager: React.FC = () => {
           type: 'info',
           title: 'Instalar App',
           message: 'Instale o Viva+ para uma experiência melhor!',
+          autoClose: false,
         });
       }, 30000); // 30 segundos
 
@@ -72,81 +86,115 @@ const PWAManager: React.FC = () => {
   return null;
 };
 
-const App: React.FC = () => {
+// Componente de rota protegida
+const ProtectedRoute: React.FC<{ children: React.ReactNode; userType: string }> = ({ 
+  children, 
+  userType 
+}) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <PWAManager />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/cadastro" element={<Cadastro />} />
-            
-            {/* Dashboard Routes with Layout and Lazy Loading */}
-            <Route path="/dashboard/servidor" element={
-              <Layout userType="servidor">
-                <ServidorDashboard />
-              </Layout>
-            } />
-            
-            <Route path="/dashboard/psicologo" element={
-              <Layout userType="psicologo">
-                <PsicologoDashboard />
-              </Layout>
-            } />
-            
-            <Route path="/dashboard/medico" element={
-              <Layout userType="medico">
-                <MedicoDashboard />
-              </Layout>
-            } />
-            
-            <Route path="/dashboard/admin" element={
-              <Layout userType="admin">
-                <AdminDashboard />
-              </Layout>
-            } />
+    <ErrorBoundary>
+      <Layout userType={userType as any}>
+        {children}
+      </Layout>
+    </ErrorBoundary>
+  );
+};
 
-            {/* Shared Pages with Layout and Lazy Loading */}
-            <Route path="/agendamentos" element={
-              <Layout userType="servidor">
-                <Agendamentos />
-              </Layout>
-            } />
+const App: React.FC = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
 
-            <Route path="/termometro" element={
-              <Layout userType="servidor">
-                <Termometro />
-              </Layout>
-            } />
+  React.useEffect(() => {
+    // Simular carregamento inicial da aplicação
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
 
-            <Route path="/chat" element={
-              <Layout userType="servidor">
-                <ChatViva />
-              </Layout>
-            } />
+    return () => clearTimeout(timer);
+  }, []);
 
-            <Route path="/prontuarios" element={
-              <Layout userType="psicologo">
-                <Prontuarios />
-              </Layout>
-            } />
+  if (isLoading) {
+    return <LoadingPage message="Inicializando Viva+..." />;
+  }
 
-            <Route path="/perfil" element={
-              <Layout userType="servidor">
-                <Perfil />
-              </Layout>
-            } />
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <NotificationContainer />
+            <PWAManager />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/cadastro" element={<Cadastro />} />
+                
+                {/* Dashboard Routes with Layout and Lazy Loading */}
+                <Route path="/dashboard/servidor" element={
+                  <ProtectedRoute userType="servidor">
+                    <ServidorDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/dashboard/psicologo" element={
+                  <ProtectedRoute userType="psicologo">
+                    <PsicologoDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/dashboard/medico" element={
+                  <ProtectedRoute userType="medico">
+                    <MedicoDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/dashboard/admin" element={
+                  <ProtectedRoute userType="admin">
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } />
 
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+                {/* Shared Pages with Layout and Lazy Loading */}
+                <Route path="/agendamentos" element={
+                  <ProtectedRoute userType="servidor">
+                    <Agendamentos />
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/termometro" element={
+                  <ProtectedRoute userType="servidor">
+                    <Termometro />
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/chat" element={
+                  <ProtectedRoute userType="servidor">
+                    <ChatViva />
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/prontuarios" element={
+                  <ProtectedRoute userType="psicologo">
+                    <Prontuarios />
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/perfil" element={
+                  <ProtectedRoute userType="servidor">
+                    <Perfil />
+                  </ProtectedRoute>
+                } />
+
+                {/* Catch-all route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 

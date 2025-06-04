@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { 
   Menu, 
@@ -10,7 +9,6 @@ import {
   User, 
   LogOut,
   Settings,
-  Bell,
   FileText,
   Wifi,
   WifiOff
@@ -19,6 +17,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore, useUserStore } from '@/store';
 import { useNetworkStatus } from '@/store';
 import { Badge } from '@/components/ui/badge';
+import { NotificationCenter } from './NotificationSystem';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,17 +29,12 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isOnline = useNetworkStatus();
+  const { logout } = useAuth();
   
   const { 
     sidebarOpen, 
-    setSidebarOpen, 
-    notifications,
-    markNotificationRead 
+    setSidebarOpen,
   } = useAppStore();
-  
-  const { logout } = useUserStore();
-
-  const unreadNotifications = notifications.filter(n => !n.read).length;
 
   const getMenuItems = () => {
     const commonItems = [
@@ -74,10 +69,8 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
     }
   };
 
-  const menuItems = getMenuItems();
-
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
@@ -111,7 +104,7 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
         </div>
 
         <nav className="flex-1 px-4 py-6 space-y-2">
-          {menuItems.map((item) => (
+          {getMenuItems().map((item) => (
             <Button
               key={item.path}
               variant={location.pathname === item.path ? "default" : "ghost"}
@@ -171,17 +164,7 @@ const Layout = ({ children, userType = 'servidor' }: LayoutProps) => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="relative">
-              <Bell className="w-5 h-5" />
-              {unreadNotifications > 0 && (
-                <Badge 
-                  variant="destructive" 
-                  className="absolute -top-1 -right-1 w-5 h-5 text-xs p-0 flex items-center justify-center"
-                >
-                  {unreadNotifications}
-                </Badge>
-              )}
-            </Button>
+            <NotificationCenter />
             <Button variant="ghost" size="sm" onClick={() => navigate('/perfil')}>
               <User className="w-5 h-5" />
             </Button>
