@@ -150,13 +150,19 @@ export class ErrorBoundary extends Component<Props, State> {
 }
 
 // Higher-order component for easier usage
-export const withErrorBoundary = <P extends object>(
+export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
   fallback?: ReactNode
-) => {
-  return React.forwardRef<any, P>((props, ref) => (
+) {
+  const displayName = Component.displayName || Component.name || 'Component';
+  
+  const WithErrorBoundary = React.forwardRef<unknown, P>((props, ref) => (
     <ErrorBoundary fallback={fallback}>
-      <Component {...props} ref={ref} />
+      <Component {...(props as P)} ref={ref as any} />
     </ErrorBoundary>
   ));
-};
+  
+  WithErrorBoundary.displayName = `withErrorBoundary(${displayName})`;
+  
+  return WithErrorBoundary;
+}

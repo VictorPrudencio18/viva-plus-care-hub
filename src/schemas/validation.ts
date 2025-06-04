@@ -149,7 +149,8 @@ export const useFormValidation = <T>(schema: z.ZodSchema<T>) => {
   
   const validateField = (fieldName: string, value: unknown) => {
     try {
-      const fieldSchema = schema.shape?.[fieldName];
+      // Acessando o campo específico usando o método de extração seguro do Zod
+      const fieldSchema = schema.extract([fieldName as keyof z.TypeOf<typeof schema>]);
       if (fieldSchema) {
         fieldSchema.parse(value);
         return { isValid: true, error: null };

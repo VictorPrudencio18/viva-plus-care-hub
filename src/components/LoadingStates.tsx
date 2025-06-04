@@ -2,6 +2,7 @@
 import React from 'react';
 import { Loader2, Heart, Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Skeleton as UISkeleton } from '@/components/ui/skeleton';
 
 interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -49,9 +50,8 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   animate = true 
 }) => {
   return (
-    <div
+    <UISkeleton
       className={cn(
-        'bg-gray-200 rounded-md',
         animate && 'animate-pulse',
         className
       )}
@@ -90,7 +90,7 @@ export const SkeletonChart: React.FC = () => {
         </div>
         <div className="h-64 flex items-end space-x-2">
           {[...Array(7)].map((_, i) => (
-            <Skeleton 
+            <div 
               key={i} 
               className={`w-full bg-gradient-to-t from-blue-200 to-blue-100`}
               style={{ height: `${Math.random() * 100 + 50}%` }}

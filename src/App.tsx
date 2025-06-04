@@ -62,7 +62,7 @@ const PWAManager: React.FC = () => {
         action: {
           label: 'Atualizar',
           onClick: () => window.location.reload(),
-        },
+        }
       });
     }
   }, [updateAvailable, addNotification]);
@@ -75,7 +75,7 @@ const PWAManager: React.FC = () => {
           type: 'info',
           title: 'Instalar App',
           message: 'Instale o Viva+ para uma experiência melhor!',
-          autoClose: false,
+          autoClose: false
         });
       }, 30000); // 30 segundos
 

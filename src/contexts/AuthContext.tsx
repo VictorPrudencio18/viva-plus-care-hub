@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           id: response.user.id,
           name: response.user.name,
           email: response.user.email,
-          type: response.user.type,
+          type: response.user.type as 'servidor' | 'psicologo' | 'medico' | 'admin',
           avatar: response.user.avatar,
         };
         
