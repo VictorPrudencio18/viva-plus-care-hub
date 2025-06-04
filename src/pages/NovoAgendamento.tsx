@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -353,7 +352,7 @@ const NovoAgendamento = () => {
                       checked={formData.lembretes.sms}
                       onCheckedChange={(checked) => setFormData(prev => ({
                         ...prev,
-                        lembretes: { ...prev.lembretes, sms: checked }
+                        lembretes: { ...prev.lembretes, sms: checked === true }
                       }))}
                     />
                     <Label htmlFor="lembrete-sms">SMS</Label>
@@ -364,7 +363,7 @@ const NovoAgendamento = () => {
                       checked={formData.lembretes.email}
                       onCheckedChange={(checked) => setFormData(prev => ({
                         ...prev,
-                        lembretes: { ...prev.lembretes, email: checked }
+                        lembretes: { ...prev.lembretes, email: checked === true }
                       }))}
                     />
                     <Label htmlFor="lembrete-email">Email</Label>
@@ -375,7 +374,7 @@ const NovoAgendamento = () => {
                       checked={formData.lembretes.whatsapp}
                       onCheckedChange={(checked) => setFormData(prev => ({
                         ...prev,
-                        lembretes: { ...prev.lembretes, whatsapp: checked }
+                        lembretes: { ...prev.lembretes, whatsapp: checked === true }
                       }))}
                     />
                     <Label htmlFor="lembrete-whatsapp">WhatsApp</Label>

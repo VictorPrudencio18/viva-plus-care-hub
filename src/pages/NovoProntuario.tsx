@@ -482,7 +482,7 @@ const NovoProntuario = () => {
                           checked={contato.emergencia}
                           onCheckedChange={(checked) => {
                             const novosContatos = [...formData.contatos];
-                            novosContatos[index].emergencia = checked;
+                            novosContatos[index].emergencia = checked === true;
                             setFormData(prev => ({ ...prev, contatos: novosContatos }));
                           }}
                         />

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -120,20 +119,20 @@ const Avaliacoes = () => {
     }
   ];
 
-  const [respostas, setRespostas] = useState({});
+  const [respostas, setRespostas] = useState<Record<number, number>>({});
 
   const pacientesFiltrados = pacientes.filter(p => 
     p.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const iniciarAvaliacao = (escala, paciente) => {
+  const iniciarAvaliacao = (escala: string, paciente: any) => {
     setSelectedPaciente(paciente);
     setAvaliacaoAtual(escala);
     setRespostas({});
   };
 
   const finalizarAvaliacao = () => {
-    const pontuacaoTotal = Object.values(respostas).reduce((acc, val) => acc + val, 0);
+    const pontuacaoTotal = Object.values(respostas).reduce((acc: number, val: number) => acc + val, 0);
     console.log('Avaliação finalizada:', {
       paciente: selectedPaciente,
       escala: avaliacaoAtual,
@@ -147,7 +146,7 @@ const Avaliacoes = () => {
     setRespostas({});
   };
 
-  const interpretarPontuacao = (pontos, escala) => {
+  const interpretarPontuacao = (pontos: number, escala: string) => {
     if (escala === 'beck-depression') {
       if (pontos <= 13) return { nivel: 'Mínimo', cor: 'bg-green-100 text-green-800' };
       if (pontos <= 19) return { nivel: 'Leve', cor: 'bg-yellow-100 text-yellow-800' };
@@ -371,7 +370,7 @@ const Avaliacoes = () => {
                     <h4 className="font-medium text-blue-900 mb-2">Pontuação Atual</h4>
                     <div className="flex items-center gap-4">
                       <span className="text-2xl font-bold text-blue-900">
-                        {Object.values(respostas).reduce((acc, val) => acc + val, 0)} pontos
+                        {Object.values(respostas).reduce((acc: number, val: number) => acc + val, 0)} pontos
                       </span>
                       <span className="text-sm text-blue-700">
                         {Object.keys(respostas).length} de {perguntasBDI.length} questões respondidas
