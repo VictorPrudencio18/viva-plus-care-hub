@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,8 @@ import {
   Mail
 } from "lucide-react";
 import { ComprehensivePatient } from '@/types/enhanced-patient';
+import MedicalHistoryTab from './MedicalHistoryTab';
+import SessionsTab from './SessionsTab';
 
 interface PatientDashboardProps {
   patient: ComprehensivePatient;
@@ -27,10 +28,12 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ patient, onUpdatePa
   const [activeTab, setActiveTab] = useState('overview');
 
   const getActiveAlerts = () => {
-    return patient.alerts.filter(alert => alert.active);
+    return patient.alerts?.filter(alert => alert.active) || [];
   };
 
   const getRiskLevel = () => {
+    if (!patient.psychologicalProfile) return 'low';
+    
     const risks = patient.psychologicalProfile.riskFactors;
     const maxRisk = Math.max(
       ...Object.values(risks).map(risk => {
@@ -333,27 +336,11 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ patient, onUpdatePa
         </TabsContent>
 
         <TabsContent value="history">
-          <div className="text-center py-12">
-            <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Histórico Médico Detalhado
-            </h3>
-            <p className="text-gray-500">
-              Seção em desenvolvimento - Histórico completo do paciente
-            </p>
-          </div>
+          <MedicalHistoryTab patient={patient} onUpdatePatient={onUpdatePatient} />
         </TabsContent>
 
         <TabsContent value="sessions">
-          <div className="text-center py-12">
-            <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Histórico de Sessões
-            </h3>
-            <p className="text-gray-500">
-              Seção em desenvolvimento - Todas as sessões registradas
-            </p>
-          </div>
+          <SessionsTab patient={patient} onUpdatePatient={onUpdatePatient} />
         </TabsContent>
 
         <TabsContent value="assessments">
