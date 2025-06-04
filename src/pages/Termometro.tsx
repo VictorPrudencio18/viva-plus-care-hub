@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Heart, TrendingUp, Calendar, AlertTriangle, Sparkles, Brain, Smile, Activity, Target, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
+import { TherapeuticCard } from "@/design-system/components/TherapeuticCard";
+import { TherapeuticButton } from "@/design-system/components/TherapeuticButton";
+import { TherapeuticBadge } from "@/design-system/components/TherapeuticBadge";
+import { TherapeuticProgress } from "@/design-system/components/TherapeuticProgress";
 
 const Termometro = () => {
   const [selectedMood, setSelectedMood] = useState("");
@@ -49,7 +51,8 @@ const Termometro = () => {
       gradient: "from-emerald-400 via-green-500 to-emerald-600",
       shadow: "shadow-emerald-500/25",
       glow: "shadow-emerald-400/40",
-      description: "Sentindo-me fantástico!"
+      description: "Sentindo-me fantástico!",
+      color: "emerald"
     },
     { 
       emoji: "😊", 
@@ -58,7 +61,8 @@ const Termometro = () => {
       gradient: "from-blue-400 via-cyan-500 to-blue-600",
       shadow: "shadow-blue-500/25",
       glow: "shadow-blue-400/40",
-      description: "Estou bem hoje"
+      description: "Estou bem hoje",
+      color: "blue"
     },
     { 
       emoji: "😐", 
@@ -67,7 +71,8 @@ const Termometro = () => {
       gradient: "from-slate-400 via-gray-500 to-slate-600",
       shadow: "shadow-gray-500/25",
       glow: "shadow-gray-400/40",
-      description: "Nem bem, nem mal"
+      description: "Nem bem, nem mal",
+      color: "gray"
     },
     { 
       emoji: "😟", 
@@ -76,7 +81,8 @@ const Termometro = () => {
       gradient: "from-orange-400 via-amber-500 to-orange-600",
       shadow: "shadow-orange-500/25",
       glow: "shadow-orange-400/40",
-      description: "Não estou bem"
+      description: "Não estou bem",
+      color: "orange"
     },
     { 
       emoji: "😢", 
@@ -85,7 +91,8 @@ const Termometro = () => {
       gradient: "from-red-400 via-rose-500 to-red-600",
       shadow: "shadow-red-500/25",
       glow: "shadow-red-400/40",
-      description: "Preciso de ajuda"
+      description: "Preciso de ajuda",
+      color: "red"
     }
   ];
 
@@ -133,8 +140,8 @@ const Termometro = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(59,130,246,0.05),transparent_50%),radial-gradient(circle_at_75%_75%,rgba(16,185,129,0.05),transparent_50%)]" />
       
       <div className="relative z-10 p-6 space-y-8 max-w-7xl mx-auto">
-        {/* Header Glassmorphism */}
-        <div className="glass-effect rounded-3xl p-8 border border-white/20 backdrop-blur-xl">
+        {/* Header Modernizado */}
+        <TherapeuticCard variant="glass" padding="lg" className="backdrop-blur-2xl border-white/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-4">
               <div className="flex items-center gap-4">
@@ -155,13 +162,15 @@ const Termometro = () => {
             
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="group relative overflow-hidden bg-gradient-to-r from-blue-500 via-purple-500 to-emerald-500 hover:from-blue-600 hover:via-purple-600 hover:to-emerald-600 text-white border-0 px-8 py-6 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105">
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Heart className="w-6 h-6 mr-3 animate-pulse" />
-                  <Sparkles className="w-5 h-5 mr-2" />
+                <TherapeuticButton 
+                  variant="therapeutic" 
+                  size="lg"
+                  leftIcon={<Heart className="w-6 h-6" />}
+                  rightIcon={<Sparkles className="w-5 h-5" />}
+                  className="text-lg px-8 py-6"
+                >
                   Responder Questionário
-                  <Zap className="w-5 h-5 ml-2 group-hover:animate-bounce" />
-                </Button>
+                </TherapeuticButton>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[700px] rounded-3xl border-0 bg-white/95 backdrop-blur-xl">
                 <DialogHeader className="text-center space-y-4">
@@ -216,11 +225,10 @@ const Termometro = () => {
               </DialogContent>
             </Dialog>
           </div>
-        </div>
+        </TherapeuticCard>
 
-        {/* Card Principal com Glassmorphism - Seletor de Humor */}
-        <Card className="glass-effect border-0 rounded-3xl shadow-2xl backdrop-blur-xl border border-white/20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-emerald-500/5" />
+        {/* Card Principal de Seleção de Humor Modernizado */}
+        <TherapeuticCard variant="therapeutic" padding="lg">
           <CardHeader className="text-center pb-8 relative z-10">
             <CardTitle className="text-3xl font-bold text-gray-800 mb-2">
               Como você está se sentindo hoje?
@@ -238,7 +246,9 @@ const Termometro = () => {
                   onMouseEnter={() => setHoveredEmoji(mood.value)}
                   onMouseLeave={() => setHoveredEmoji("")}
                 >
-                  <button
+                  <TherapeuticButton
+                    variant={selectedMood === mood.value ? "primary" : "ghost"}
+                    size="xl"
                     onClick={() => setSelectedMood(mood.value)}
                     className={`
                       relative w-full p-8 rounded-3xl transition-all duration-500 transform-gpu will-change-transform
@@ -250,9 +260,6 @@ const Termometro = () => {
                       group-hover:-translate-y-3 backdrop-blur-sm border border-white/30
                     `}
                   >
-                    {/* Efeito de brilho animado */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out rounded-3xl" />
-                    
                     <div className="text-center space-y-4 relative z-10">
                       <div className={`text-6xl transition-all duration-300 ${hoveredEmoji === mood.value ? 'animate-pulse scale-125' : ''}`}>
                         {mood.emoji}
@@ -277,16 +284,7 @@ const Termometro = () => {
                         <div className="w-3 h-3 bg-emerald-500 rounded-full" />
                       </div>
                     )}
-
-                    {/* Partículas decorativas */}
-                    {hoveredEmoji === mood.value && (
-                      <>
-                        <div className="absolute top-4 right-4 w-2 h-2 bg-white/50 rounded-full animate-ping" />
-                        <div className="absolute bottom-4 left-4 w-1 h-1 bg-white/70 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }} />
-                        <div className="absolute top-6 left-6 w-1.5 h-1.5 bg-white/60 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
-                      </>
-                    )}
-                  </button>
+                  </TherapeuticButton>
                 </div>
               ))}
             </div>
@@ -301,31 +299,32 @@ const Termometro = () => {
                   <p className="text-lg font-semibold text-gray-800">
                     Humor registrado: {moodEmojis.find(m => m.value === selectedMood)?.label}
                   </p>
-                  <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
+                  <TherapeuticBadge variant="positive" size="sm">
+                    ✓ Registrado
+                  </TherapeuticBadge>
                 </div>
               </div>
             )}
           </CardContent>
-        </Card>
+        </TherapeuticCard>
 
-        {/* Cards de Status Modernos com Micro-interações */}
+        {/* Cards de Status Modernizados */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { 
               title: "Status Atual", 
               icon: Heart, 
-              content: humorStatus.status, 
-              gradient: humorStatus.gradient,
-              iconColor: "text-pink-500",
-              emoji: humorStatus.icon
+              content: "Excelente", 
+              subtitle: "humor estável",
+              variant: "positive" as const,
+              emoji: "🌟"
             },
             { 
               title: "Última Avaliação", 
               icon: Calendar, 
               content: "8/10", 
               subtitle: "há 3 dias",
-              gradient: "from-blue-400 to-cyan-600",
-              iconColor: "text-blue-500",
+              variant: "primary" as const,
               emoji: "📅"
             },
             { 
@@ -333,8 +332,7 @@ const Termometro = () => {
               icon: TrendingUp, 
               content: "+15%", 
               subtitle: "melhoria nas últimas 4 semanas",
-              gradient: "from-emerald-400 to-green-600",
-              iconColor: "text-emerald-500",
+              variant: "secondary" as const,
               emoji: "📈"
             },
             { 
@@ -342,48 +340,40 @@ const Termometro = () => {
               icon: AlertTriangle, 
               content: "0", 
               subtitle: "nenhum alerta ativo",
-              gradient: "from-gray-400 to-slate-600",
-              iconColor: "text-gray-500",
+              variant: "neutral" as const,
               emoji: "🔔"
             }
           ].map((card, index) => (
-            <Card key={index} className="group glass-effect border-0 rounded-2xl backdrop-blur-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:scale-105 cursor-pointer overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 relative z-10">
-                <CardTitle className="text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
+            <TherapeuticCard key={index} variant="elevated" padding="md" className="hover:-translate-y-2 hover:scale-105 cursor-pointer">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-sm font-semibold text-gray-700">
                   {card.title}
                 </CardTitle>
                 <div className="relative">
-                  <card.icon className={`h-5 w-5 ${card.iconColor} group-hover:animate-bounce transition-all duration-300`} />
-                  <div className="absolute -top-1 -right-1 text-xs group-hover:animate-pulse">
+                  <card.icon className="h-5 w-5 text-gray-500" />
+                  <div className="absolute -top-1 -right-1 text-xs">
                     {card.emoji}
                   </div>
                 </div>
               </CardHeader>
               
-              <CardContent className="relative z-10">
-                <div className={`inline-flex items-center justify-center px-4 py-2 rounded-xl bg-gradient-to-r ${card.gradient} text-white font-bold text-lg shadow-lg group-hover:shadow-xl transition-all duration-300 mb-2`}>
+              <CardContent>
+                <TherapeuticBadge variant={card.variant} size="lg" className="mb-2">
                   {card.content}
-                </div>
+                </TherapeuticBadge>
                 {card.subtitle && (
-                  <p className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
+                  <p className="text-sm text-gray-600">
                     {card.subtitle}
                   </p>
                 )}
               </CardContent>
-
-              {/* Efeito de ondulação no hover */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-emerald-400 rounded-2xl animate-pulse" />
-              </div>
-            </Card>
+            </TherapeuticCard>
           ))}
         </div>
 
         {/* Gráficos Modernos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card className="glass-effect border-0 rounded-3xl shadow-2xl backdrop-blur-xl border border-white/20">
+          <TherapeuticCard variant="glass" padding="lg">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-3">
                 <Activity className="w-6 h-6 text-blue-500" />
@@ -427,9 +417,9 @@ const Termometro = () => {
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
-          </Card>
+          </TherapeuticCard>
 
-          <Card className="glass-effect border-0 rounded-3xl shadow-2xl backdrop-blur-xl border border-white/20">
+          <TherapeuticCard variant="glass" padding="lg">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-3">
                 <Target className="w-6 h-6 text-emerald-500" />
@@ -468,11 +458,11 @@ const Termometro = () => {
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
-          </Card>
+          </TherapeuticCard>
         </div>
 
-        {/* Metas de Bem-estar com Animações */}
-        <Card className="glass-effect border-0 rounded-3xl shadow-2xl backdrop-blur-xl border border-white/20">
+        {/* Metas de Bem-estar Modernizadas */}
+        <TherapeuticCard variant="therapeutic" padding="lg">
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-gray-800 flex items-center gap-3">
               <Target className="w-8 h-8 text-emerald-500" />
@@ -484,37 +474,35 @@ const Termometro = () => {
           </CardHeader>
           <CardContent className="space-y-8">
             {[
-              { label: "Estabilidade Emocional", value: 75, gradient: "from-blue-400 to-cyan-600", emoji: "🧠" },
-              { label: "Gestão do Estresse", value: 60, gradient: "from-emerald-400 to-green-600", emoji: "🌱" },
-              { label: "Qualidade do Sono", value: 85, gradient: "from-purple-400 to-indigo-600", emoji: "😴" },
-              { label: "Relacionamentos", value: 90, gradient: "from-pink-400 to-rose-600", emoji: "❤️" }
+              { label: "Estabilidade Emocional", value: 75, emotion: "calm" as const, emoji: "🧠" },
+              { label: "Gestão do Estresse", value: 60, emotion: "positive" as const, emoji: "🌱" },
+              { label: "Qualidade do Sono", value: 85, emotion: "neutral" as const, emoji: "😴" },
+              { label: "Relacionamentos", value: 90, emotion: "positive" as const, emoji: "❤️" }
             ].map((meta, index) => (
-              <div key={index} className="group space-y-4 p-6 rounded-2xl bg-gradient-to-br from-white/50 to-white/30 backdrop-blur-sm border border-white/30 hover:shadow-lg transition-all duration-300">
+              <div key={index} className="space-y-4 p-6 rounded-2xl bg-gradient-to-br from-white/50 to-white/30 backdrop-blur-sm border border-white/30 hover:shadow-lg transition-all duration-300">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl group-hover:animate-bounce">{meta.emoji}</span>
-                    <Label className="text-lg font-bold text-gray-800 group-hover:text-gray-900 transition-colors">
+                    <span className="text-2xl">{meta.emoji}</span>
+                    <Label className="text-lg font-bold text-gray-800">
                       {meta.label}
                     </Label>
                   </div>
-                  <span className="text-2xl font-bold text-gray-700 group-hover:scale-110 transition-transform">
+                  <TherapeuticBadge variant="primary" size="sm">
                     {meta.value}%
-                  </span>
+                  </TherapeuticBadge>
                 </div>
-                <div className="relative">
-                  <div className="h-4 rounded-full bg-gray-200 overflow-hidden">
-                    <div 
-                      className={`h-full bg-gradient-to-r ${meta.gradient} transition-all duration-1000 ease-out rounded-full relative overflow-hidden`}
-                      style={{ width: `${meta.value}%` }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
-                    </div>
-                  </div>
-                </div>
+                <TherapeuticProgress 
+                  value={meta.value} 
+                  emotion={meta.emotion}
+                  variant="therapeutic"
+                  animated
+                  glow
+                  className="h-3"
+                />
               </div>
             ))}
           </CardContent>
-        </Card>
+        </TherapeuticCard>
       </div>
     </div>
   );

@@ -7,6 +7,8 @@ export { default as designTokens, accessibilityTokens } from './tokens';
 // Componentes terapêuticos
 export { TherapeuticButton, therapeuticButtonVariants } from './components/TherapeuticButton';
 export { TherapeuticCard, therapeuticCardVariants } from './components/TherapeuticCard';
+export { TherapeuticBadge, therapeuticBadgeVariants } from './components/TherapeuticBadge';
+export { TherapeuticProgress, therapeuticProgressVariants } from './components/TherapeuticProgress';
 
 // Hooks de animação
 export { 
