@@ -143,24 +143,30 @@ export const validateForm = <T>(schema: z.ZodSchema<T>, data: unknown) => {
   }
 };
 
-// Hook para validação de formulários
+// Hook para validação de formulários simplificado
 export const useFormValidation = <T>(schema: z.ZodSchema<T>) => {
   const validate = (data: unknown) => validateForm(schema, data);
   
   const validateField = (fieldName: string, value: unknown) => {
     try {
-      // Criar um schema temporário para validar apenas o campo específico
+      // Validação simples baseada no tipo do campo
       const tempObject = { [fieldName]: value };
-      schema.partial().parse(tempObject);
+      
+      // Para campos simples, tentamos validar individualmente
+      if (fieldName === 'email' && typeof value === 'string') {
+        z.string().email().parse(value);
+      } else if (fieldName === 'password' && typeof value === 'string') {
+        z.string().min(6).parse(value);
+      } else if (fieldName === 'name' && typeof value === 'string') {
+        z.string().min(2).parse(value);
+      }
+      
       return { isValid: true, error: null };
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldError = error.errors.find(err => 
-          err.path.includes(fieldName)
-        );
         return { 
           isValid: false, 
-          error: fieldError?.message || 'Campo inválido' 
+          error: error.errors[0]?.message || 'Campo inválido' 
         };
       }
       return { isValid: false, error: 'Erro de validação' };
