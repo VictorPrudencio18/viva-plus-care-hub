@@ -13,8 +13,35 @@ import {
   Bell,
   Clock
 } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 const ServidorDashboard = () => {
+  const [selectedMood, setSelectedMood] = useState("");
+  const navigate = useNavigate();
+
+  const moodOptions = [
+    { emoji: "😢", label: "Muito Ruim", value: "muito-ruim", color: "bg-red-100 hover:bg-red-200 border-red-300" },
+    { emoji: "😟", label: "Ruim", value: "ruim", color: "bg-orange-100 hover:bg-orange-200 border-orange-300" },
+    { emoji: "😐", label: "Regular", value: "regular", color: "bg-gray-100 hover:bg-gray-200 border-gray-300" },
+    { emoji: "😊", label: "Bom", value: "bom", color: "bg-blue-100 hover:bg-blue-200 border-blue-300" },
+    { emoji: "😄", label: "Excelente", value: "excelente", color: "bg-green-100 hover:bg-green-200 border-green-300" }
+  ];
+
+  const handleMoodSelect = (mood: string) => {
+    setSelectedMood(mood);
+    const selectedOption = moodOptions.find(option => option.value === mood);
+    toast({
+      title: "Humor registrado!",
+      description: `Você selecionou: ${selectedOption?.label}`,
+    });
+  };
+
+  const handleQuestionario = () => {
+    navigate('/termometro');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-7xl mx-auto">
@@ -91,35 +118,78 @@ const ServidorDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Termômetro de Humor */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2" />
+            {/* Termômetro de Humor Melhorado */}
+            <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="flex items-center justify-center gap-3 text-2xl font-bold text-gray-800">
+                  <TrendingUp className="w-6 h-6 text-blue-600" />
                   Termômetro de Humor
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-4xl mb-2">😊</div>
-                    <p className="text-lg font-semibold">Como você está se sentindo hoje?</p>
-                  </div>
-                  <div className="grid grid-cols-5 gap-2">
-                    {['😢', '😟', '😐', '😊', '😄'].map((emoji, index) => (
-                      <Button 
-                        key={index}
-                        variant="outline"
-                        className="h-16 text-2xl hover:bg-primary hover:text-white"
-                      >
-                        {emoji}
-                      </Button>
-                    ))}
-                  </div>
-                  <Button className="w-full bg-primary">
-                    Responder Questionário Semanal
-                  </Button>
+              <CardContent className="space-y-6">
+                <div className="text-center">
+                  <div className="text-6xl mb-4 animate-bounce">😊</div>
+                  <p className="text-xl font-semibold text-gray-700 mb-6">
+                    Como você está se sentindo hoje?
+                  </p>
                 </div>
+                
+                {/* Grid de Emojis Melhorado */}
+                <div className="grid grid-cols-5 gap-3">
+                  {moodOptions.map((mood) => (
+                    <button
+                      key={mood.value}
+                      onClick={() => handleMoodSelect(mood.value)}
+                      className={`
+                        relative p-4 rounded-2xl border-2 transition-all duration-300 transform
+                        ${selectedMood === mood.value 
+                          ? 'scale-110 ring-4 ring-blue-300 bg-blue-200 border-blue-400' 
+                          : mood.color
+                        }
+                        hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300
+                        active:scale-95 cursor-pointer
+                      `}
+                    >
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">{mood.emoji}</div>
+                        <p className="text-xs font-medium text-gray-700">{mood.label}</p>
+                      </div>
+                      
+                      {/* Indicador de seleção */}
+                      {selectedMood === mood.value && (
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                          <div className="w-3 h-3 bg-white rounded-full"></div>
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Feedback visual quando selecionado */}
+                {selectedMood && (
+                  <div className="bg-white/80 backdrop-blur-sm p-4 rounded-xl border border-blue-200 animate-fade-in">
+                    <div className="flex items-center justify-center gap-3">
+                      <div className="text-2xl">
+                        {moodOptions.find(m => m.value === selectedMood)?.emoji}
+                      </div>
+                      <p className="font-semibold text-gray-800">
+                        Humor registrado: {moodOptions.find(m => m.value === selectedMood)?.label}
+                      </p>
+                      <Badge variant="secondary" className="bg-green-100 text-green-800">
+                        ✓ Salvo
+                      </Badge>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Botão do Questionário Melhorado */}
+                <Button 
+                  onClick={handleQuestionario}
+                  className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                >
+                  <Heart className="w-5 h-5 mr-2" />
+                  Responder Questionário Semanal
+                </Button>
               </CardContent>
             </Card>
 
