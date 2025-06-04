@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,8 @@ import {
   FileText,
   Clock,
   Edit,
-  Printer
+  Printer,
+  History
 } from "lucide-react";
 
 const Pacientes = () => {
