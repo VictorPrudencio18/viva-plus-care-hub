@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -133,7 +132,7 @@ const ChartsTab: React.FC<ChartsTabProps> = ({ patient }) => {
                   <XAxis dataKey="name" />
                   <YAxis domain={[0, 100]} />
                   <Tooltip 
-                    formatter={(value, name, props) => [`${props.payload.fullScore}/${props.payload.maxScore} (${value.toFixed(0)}%)`, 'Pontuação']}
+                    formatter={(value, name, props) => [`${props.payload.fullScore}/${props.payload.maxScore} (${typeof value === 'number' ? value.toFixed(0) : value}%)`, 'Pontuação']}
                     labelFormatter={(label) => `Escala: ${label}`}
                   />
                   <Bar dataKey="score" fill="#8884d8" />
