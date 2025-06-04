@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -24,150 +25,48 @@ import {
   Clock,
   Edit,
   Printer,
-  History
+  History,
+  Brain,
+  Target
 } from "lucide-react";
+
+// Import components and data
+import PatientAssessments from '@/components/patient-management/PatientAssessments';
+import TreatmentPlanManager from '@/components/patient-management/TreatmentPlanManager';
+import SessionManager from '@/components/patient-management/SessionManager';
+import { complexPatients } from '@/data/complexPatients';
+import { ComplexPatient } from '@/types/patient';
 
 const Pacientes = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPaciente, setSelectedPaciente] = useState(null);
+  const [selectedPaciente, setSelectedPaciente] = useState<ComplexPatient | null>(null);
   const [filterStatus, setFilterStatus] = useState("todos");
 
-  const pacientes = [
-    {
-      id: 1,
-      nome: "João Silva",
-      email: "joao.silva@empresa.com",
-      telefone: "(11) 99999-9999",
-      departamento: "TI",
-      cargo: "Desenvolvedor",
-      status: "acompanhamento",
-      prioridade: "alta",
-      humorMedio: 4,
-      tendencia: "baixa",
-      ultimaConsulta: "2024-01-15",
-      proximaConsulta: "2024-01-22",
-      sessoes: 8,
-      avatar: "/placeholder.svg",
-      observacoes: "Paciente apresenta sinais de ansiedade relacionada ao trabalho.",
-      prontuario: {
-        diagnostico: "Transtorno de Ansiedade Generalizada",
-        tratamento: "Terapia Cognitivo-Comportamental",
-        medicamentos: ["Sertralina 50mg", "Alprazolam 0,25mg"],
-        evolucoes: [
-          {
-            data: "2024-01-15",
-            profissional: "Dr. Maria Santos",
-            tipo: "Consulta Psicológica",
-            observacoes: "Paciente relata melhora nos sintomas de ansiedade. Demonstra maior capacidade de enfrentamento em situações de estresse no trabalho.",
-            humor: 6
-          },
-          {
-            data: "2024-01-08",
-            profissional: "Dr. João Oliveira",
-            tipo: "Consulta Médica",
-            observacoes: "Ajuste de medicação. Paciente tolerando bem a sertralina. Redução gradual do alprazolam conforme planejado.",
-            humor: 5
-          },
-          {
-            data: "2024-01-01",
-            profissional: "Dr. Maria Santos",
-            tipo: "Consulta Psicológica",
-            observacoes: "Início da terapia CBT. Paciente motivado para o tratamento. Estabelecidos objetivos terapêuticos.",
-            humor: 4
-          }
-        ]
-      }
-    },
-    {
-      id: 2,
-      nome: "Maria Santos",
-      email: "maria.santos@empresa.com",
-      telefone: "(11) 88888-8888",
-      departamento: "RH",
-      cargo: "Analista",
-      status: "ativo",
-      prioridade: "media",
-      humorMedio: 7,
-      tendencia: "alta",
-      ultimaConsulta: "2024-01-12",
-      proximaConsulta: "2024-01-19",
-      sessoes: 5,
-      avatar: "/placeholder.svg",
-      observacoes: "Boa evolução no tratamento. Paciente engajada.",
-      prontuario: {
-        diagnostico: "Episódio Depressivo Leve",
-        tratamento: "Psicoterapia de Apoio",
-        medicamentos: [],
-        evolucoes: [
-          {
-            data: "2024-01-12",
-            profissional: "Dr. Maria Santos",
-            tipo: "Consulta Psicológica",
-            observacoes: "Excelente progresso. Paciente demonstra maior autoestima e motivação para atividades do dia a dia.",
-            humor: 7
-          }
-        ]
-      }
-    },
-    {
-      id: 3,
-      nome: "Pedro Costa",
-      email: "pedro.costa@empresa.com",
-      telefone: "(11) 77777-7777",
-      departamento: "Vendas",
-      cargo: "Gerente",
-      status: "critico",
-      prioridade: "urgente",
-      humorMedio: 2,
-      tendencia: "baixa",
-      ultimaConsulta: "2024-01-14",
-      proximaConsulta: "2024-01-16",
-      sessoes: 12,
-      avatar: "/placeholder.svg",
-      observacoes: "Necessita acompanhamento intensivo. Sinais de burnout."
-    },
-    {
-      id: 4,
-      nome: "Ana Oliveira",
-      email: "ana.oliveira@empresa.com",
-      telefone: "(11) 66666-6666",
-      departamento: "Marketing",
-      cargo: "Coordenadora",
-      status: "estavel",
-      prioridade: "baixa",
-      humorMedio: 8,
-      tendencia: "alta",
-      ultimaConsulta: "2024-01-10",
-      proximaConsulta: "2024-01-24",
-      sessoes: 3,
-      avatar: "/placeholder.svg",
-      observacoes: "Paciente estável. Sessões de manutenção."
-    }
-  ];
-
-  const filteredPacientes = pacientes.filter(paciente => {
-    const matchesSearch = paciente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         paciente.departamento.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredPacientes = complexPatients.filter(paciente => {
+    const matchesSearch = paciente.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         paciente.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         paciente.cpf.includes(searchTerm);
     const matchesStatus = filterStatus === "todos" || paciente.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
 
   const getStatusColor = (status: string) => {
     const colors = {
-      'critico': 'bg-red-100 text-red-800 border-red-200',
-      'acompanhamento': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      'ativo': 'bg-blue-100 text-blue-800 border-blue-200',
-      'estavel': 'bg-green-100 text-green-800 border-green-200'
+      'active': 'bg-green-100 text-green-800 border-green-200',
+      'inactive': 'bg-gray-100 text-gray-800 border-gray-200',
+      'discharged': 'bg-blue-100 text-blue-800 border-blue-200',
+      'dropped-out': 'bg-red-100 text-red-800 border-red-200',
+      'referred': 'bg-purple-100 text-purple-800 border-purple-200'
     };
     return colors[status] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
   const getPrioridadeColor = (prioridade: string) => {
     const colors = {
-      'urgente': 'bg-red-500',
-      'alta': 'bg-orange-500',
-      'media': 'bg-yellow-500',
-      'baixa': 'bg-green-500'
+      'urgent': 'bg-red-500',
+      'high': 'bg-orange-500',
+      'medium': 'bg-yellow-500',
+      'low': 'bg-green-500'
     };
     return colors[prioridade] || 'bg-gray-500';
   };
@@ -178,22 +77,22 @@ const Pacientes = () => {
     return 'text-green-600';
   };
 
-  const getTipoConsultaColor = (tipo: string) => {
+  const getRiskLevelColor = (level: string) => {
     const colors = {
-      'Consulta Psicológica': 'bg-blue-100 text-blue-800 border-blue-200',
-      'Consulta Médica': 'bg-green-100 text-green-800 border-green-200',
-      'Consulta Psiquiátrica': 'bg-purple-100 text-purple-800 border-purple-200',
-      'Sessão Terapêutica': 'bg-orange-100 text-orange-800 border-orange-200'
+      'low': 'bg-green-100 text-green-800 border-green-200',
+      'medium': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      'high': 'bg-orange-100 text-orange-800 border-orange-200',
+      'critical': 'bg-red-100 text-red-800 border-red-200'
     };
-    return colors[tipo] || 'bg-gray-100 text-gray-800 border-gray-200';
+    return colors[level] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestão de Pacientes</h1>
-          <p className="text-gray-600">Acompanhe o progresso dos seus pacientes</p>
+          <h1 className="text-3xl font-bold text-gray-900">Sistema Avançado de Pacientes</h1>
+          <p className="text-gray-600">Gestão completa e profissional dos seus pacientes</p>
         </div>
 
         <Dialog>
@@ -224,8 +123,8 @@ const Pacientes = () => {
                   <Input id="telefone" placeholder="(00) 00000-0000" className="bg-white border-gray-300" />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="departamento">Departamento</label>
-                  <Input id="departamento" placeholder="Departamento" className="bg-white border-gray-300" />
+                  <label htmlFor="cpf">CPF</label>
+                  <Input id="cpf" placeholder="000.000.000-00" className="bg-white border-gray-300" />
                 </div>
               </div>
               <div className="flex justify-end gap-2">
@@ -237,48 +136,57 @@ const Pacientes = () => {
         </Dialog>
       </div>
 
-      {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Estatísticas Avançadas */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card className="bg-white border-gray-200">
           <CardContent className="p-6">
-            <h3 className="text-sm font-medium text-gray-600">Total de Pacientes</h3>
-            <p className="text-2xl font-bold text-gray-900">{pacientes.length}</p>
+            <h3 className="text-sm font-medium text-gray-600">Total Pacientes</h3>
+            <p className="text-2xl font-bold text-gray-900">{complexPatients.length}</p>
+            <p className="text-xs text-green-600 mt-1">+2 este mês</p>
           </CardContent>
         </Card>
         <Card className="bg-white border-gray-200">
           <CardContent className="p-6">
-            <h3 className="text-sm font-medium text-gray-600">Casos Críticos</h3>
-            <p className="text-2xl font-bold text-red-600">
-              {pacientes.filter(p => p.status === 'critico').length}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="bg-white border-gray-200">
-          <CardContent className="p-6">
-            <h3 className="text-sm font-medium text-gray-600">Em Acompanhamento</h3>
-            <p className="text-2xl font-bold text-yellow-600">
-              {pacientes.filter(p => p.status === 'acompanhamento').length}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="bg-white border-gray-200">
-          <CardContent className="p-6">
-            <h3 className="text-sm font-medium text-gray-600">Estáveis</h3>
+            <h3 className="text-sm font-medium text-gray-600">Pacientes Ativos</h3>
             <p className="text-2xl font-bold text-green-600">
-              {pacientes.filter(p => p.status === 'estavel').length}
+              {complexPatients.filter(p => p.status === 'active').length}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="bg-white border-gray-200">
+          <CardContent className="p-6">
+            <h3 className="text-sm font-medium text-gray-600">Alta Prioridade</h3>
+            <p className="text-2xl font-bold text-orange-600">
+              {complexPatients.filter(p => p.priority === 'high' || p.priority === 'urgent').length}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="bg-white border-gray-200">
+          <CardContent className="p-6">
+            <h3 className="text-sm font-medium text-gray-600">Taxa de Melhora</h3>
+            <p className="text-2xl font-bold text-blue-600">
+              {Math.round(complexPatients.reduce((acc, p) => acc + p.improvementRate, 0) / complexPatients.length)}%
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="bg-white border-gray-200">
+          <CardContent className="p-6">
+            <h3 className="text-sm font-medium text-gray-600">Sessões Totais</h3>
+            <p className="text-2xl font-bold text-purple-600">
+              {complexPatients.reduce((acc, p) => acc + p.totalSessions, 0)}
             </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filtros */}
+      {/* Filtros Avançados */}
       <Card className="bg-white border-gray-200">
         <CardContent className="pt-6">
           <div className="flex gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Buscar paciente por nome ou departamento..."
+                placeholder="Buscar por nome, email ou CPF..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 bg-white border-gray-300"
@@ -290,10 +198,10 @@ const Pacientes = () => {
               </SelectTrigger>
               <SelectContent className="bg-white border-gray-200 z-50">
                 <SelectItem value="todos">Todos os Status</SelectItem>
-                <SelectItem value="critico">Críticos</SelectItem>
-                <SelectItem value="acompanhamento">Acompanhamento</SelectItem>
-                <SelectItem value="ativo">Ativos</SelectItem>
-                <SelectItem value="estavel">Estáveis</SelectItem>
+                <SelectItem value="active">Ativos</SelectItem>
+                <SelectItem value="inactive">Inativos</SelectItem>
+                <SelectItem value="discharged">Alta</SelectItem>
+                <SelectItem value="dropped-out">Abandono</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -316,14 +224,14 @@ const Pacientes = () => {
                       <Avatar>
                         <AvatarImage src={paciente.avatar} />
                         <AvatarFallback className="bg-gray-100 text-gray-700">
-                          {paciente.nome.split(' ').map(n => n[0]).join('')}
+                          {paciente.name.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
-                      <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full ${getPrioridadeColor(paciente.prioridade)}`} />
+                      <div className={`absolute -top-1 -right-1 w-4 h-4 rounded-full ${getPrioridadeColor(paciente.priority)}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-medium truncate text-gray-900">{paciente.nome}</h3>
-                      <p className="text-sm text-gray-600">{paciente.departamento}</p>
+                      <h3 className="font-medium truncate text-gray-900">{paciente.name}</h3>
+                      <p className="text-sm text-gray-600">{paciente.occupation}</p>
                     </div>
                     <Badge className={`${getStatusColor(paciente.status)} border`}>
                       {paciente.status}
@@ -331,14 +239,25 @@ const Pacientes = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {/* Diagnóstico */}
+                  {paciente.treatmentPlan?.diagnosis && (
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Diagnóstico:</p>
+                      <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                        {paciente.treatmentPlan.diagnosis[0]?.split(' - ')[0] || 'Não definido'}
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Humor e Progresso */}
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Humor Médio</span>
                     <div className="flex items-center gap-2">
-                      <Heart className={`w-4 h-4 ${getHumorColor(paciente.humorMedio)}`} />
-                      <span className={`font-medium ${getHumorColor(paciente.humorMedio)}`}>
-                        {paciente.humorMedio}/10
+                      <Heart className={`w-4 h-4 ${getHumorColor(paciente.averageMood)}`} />
+                      <span className={`font-medium ${getHumorColor(paciente.averageMood)}`}>
+                        {paciente.averageMood.toFixed(1)}/10
                       </span>
-                      {paciente.tendencia === 'alta' ? (
+                      {paciente.improvementRate > 0 ? (
                         <TrendingUp className="w-4 h-4 text-green-500" />
                       ) : (
                         <TrendingDown className="w-4 h-4 text-red-500" />
@@ -346,19 +265,40 @@ const Pacientes = () => {
                     </div>
                   </div>
                   
+                  {/* Taxa de Melhora */}
                   <div>
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-600">Progresso</span>
-                      <span className="text-gray-900">{paciente.sessoes} sessões</span>
+                      <span className="text-gray-600">Taxa de Melhora</span>
+                      <span className="text-gray-900">{paciente.improvementRate}%</span>
                     </div>
-                    <Progress value={(paciente.sessoes / 20) * 100} className="h-2" />
+                    <Progress value={paciente.improvementRate} className="h-2" />
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Calendar className="w-4 h-4" />
-                    <span>Próxima: {new Date(paciente.proximaConsulta).toLocaleDateString('pt-BR')}</span>
+                  {/* Sessões e Próxima Consulta */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <FileText className="w-4 h-4" />
+                      <span>{paciente.totalSessions} sessões realizadas</span>
+                    </div>
+                    {paciente.lastAppointment && (
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Calendar className="w-4 h-4" />
+                        <span>Última: {new Date(paciente.lastAppointment).toLocaleDateString('pt-BR')}</span>
+                      </div>
+                    )}
                   </div>
 
+                  {/* Nível de Risco */}
+                  {paciente.treatmentPlan?.riskLevel && (
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-gray-500" />
+                      <Badge className={`${getRiskLevelColor(paciente.treatmentPlan.riskLevel)} border text-xs`}>
+                        Risco {paciente.treatmentPlan.riskLevel}
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Ações Rápidas */}
                   <div className="flex gap-2">
                     <Button size="sm" variant="outline" className="flex-1 border-gray-300">
                       <Calendar className="w-4 h-4 mr-1" />
@@ -376,12 +316,12 @@ const Pacientes = () => {
         </ScrollArea>
       </div>
 
-      {/* Dialog de Detalhes do Paciente com ScrollArea melhorado */}
+      {/* Dialog de Detalhes Avançado do Paciente */}
       {selectedPaciente && (
         <Dialog open={!!selectedPaciente} onOpenChange={() => setSelectedPaciente(null)}>
-          <DialogContent className="sm:max-w-[900px] h-[85vh] flex flex-col bg-white border-gray-200">
+          <DialogContent className="sm:max-w-[95vw] h-[90vh] flex flex-col bg-white border-gray-200">
             <DialogHeader className="pb-4 border-b border-gray-200 flex-shrink-0">
-              <DialogTitle className="text-xl text-gray-900">Prontuário Completo</DialogTitle>
+              <DialogTitle className="text-xl text-gray-900">Prontuário Completo - Sistema Avançado</DialogTitle>
             </DialogHeader>
             
             {/* Header do Paciente - Fixed */}
@@ -389,18 +329,22 @@ const Pacientes = () => {
               <Avatar className="w-16 h-16">
                 <AvatarImage src={selectedPaciente.avatar} />
                 <AvatarFallback className="text-lg font-semibold bg-gray-100 text-gray-700">
-                  {selectedPaciente.nome.split(' ').map(n => n[0]).join('')}
+                  {selectedPaciente.name.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-gray-900">{selectedPaciente.nome}</h3>
-                <p className="text-gray-600">{selectedPaciente.cargo} - {selectedPaciente.departamento}</p>
+                <h3 className="text-xl font-bold text-gray-900">{selectedPaciente.name}</h3>
+                <p className="text-gray-600">{selectedPaciente.occupation} • {selectedPaciente.age} anos</p>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge className={`${getStatusColor(selectedPaciente.status)} border`}>
                     {selectedPaciente.status}
                   </Badge>
+                  <Badge className={`${getRiskLevelColor(selectedPaciente.treatmentPlan?.riskLevel || 'low')} border`}>
+                    <AlertTriangle className="w-3 h-3 mr-1" />
+                    Risco {selectedPaciente.treatmentPlan?.riskLevel || 'baixo'}
+                  </Badge>
                   <span className="text-sm text-gray-500">
-                    ID: #{selectedPaciente.id.toString().padStart(4, '0')}
+                    ID: #{selectedPaciente.id.padStart(4, '0')}
                   </span>
                 </div>
               </div>
@@ -416,106 +360,154 @@ const Pacientes = () => {
               </div>
             </div>
 
-            {/* Tabs com ScrollArea */}
+            {/* Métricas Rápidas */}
+            <div className="grid grid-cols-4 gap-4 flex-shrink-0">
+              <Card className="border-l-4 border-l-blue-400 bg-white">
+                <CardContent className="p-3 text-center">
+                  <Heart className={`w-6 h-6 mx-auto mb-1 ${getHumorColor(selectedPaciente.averageMood)}`} />
+                  <p className="text-xs text-gray-600">Humor Médio</p>
+                  <p className={`text-lg font-bold ${getHumorColor(selectedPaciente.averageMood)}`}>
+                    {selectedPaciente.averageMood.toFixed(1)}/10
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-l-4 border-l-green-400 bg-white">
+                <CardContent className="p-3 text-center">
+                  <TrendingUp className="w-6 h-6 mx-auto mb-1 text-green-600" />
+                  <p className="text-xs text-gray-600">Taxa de Melhora</p>
+                  <p className="text-lg font-bold text-gray-900">{selectedPaciente.improvementRate}%</p>
+                </CardContent>
+              </Card>
+              <Card className="border-l-4 border-l-purple-400 bg-white">
+                <CardContent className="p-3 text-center">
+                  <FileText className="w-6 h-6 mx-auto mb-1 text-purple-600" />
+                  <p className="text-xs text-gray-600">Sessões Totais</p>
+                  <p className="text-lg font-bold text-gray-900">{selectedPaciente.totalSessions}</p>
+                </CardContent>
+              </Card>
+              <Card className="border-l-4 border-l-orange-400 bg-white">
+                <CardContent className="p-3 text-center">
+                  <Target className="w-6 h-6 mx-auto mb-1 text-orange-600" />
+                  <p className="text-xs text-gray-600">Adesão</p>
+                  <p className="text-lg font-bold text-gray-900">{selectedPaciente.adherenceRate}%</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Tabs Avançadas com ScrollArea */}
             <Tabs defaultValue="resumo" className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="grid w-full grid-cols-4 bg-gray-100 flex-shrink-0">
+              <TabsList className="grid w-full grid-cols-6 bg-gray-100 flex-shrink-0">
                 <TabsTrigger value="resumo" className="data-[state=active]:bg-white">Resumo</TabsTrigger>
-                <TabsTrigger value="prontuario" className="data-[state=active]:bg-white">Prontuário</TabsTrigger>
-                <TabsTrigger value="evolucao" className="data-[state=active]:bg-white">Evolução</TabsTrigger>
-                <TabsTrigger value="acoes" className="data-[state=active]:bg-white">Ações</TabsTrigger>
+                <TabsTrigger value="avaliacoes" className="data-[state=active]:bg-white">Avaliações</TabsTrigger>
+                <TabsTrigger value="plano" className="data-[state=active]:bg-white">Plano</TabsTrigger>
+                <TabsTrigger value="sessoes" className="data-[state=active]:bg-white">Sessões</TabsTrigger>
+                <TabsTrigger value="historico" className="data-[state=active]:bg-white">Histórico</TabsTrigger>
+                <TabsTrigger value="documentos" className="data-[state=active]:bg-white">Documentos</TabsTrigger>
               </TabsList>
               
               <div className="flex-1 overflow-hidden mt-4">
                 <TabsContent value="resumo" className="h-full m-0">
                   <ScrollArea className="h-full pr-4">
                     <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <span className="text-sm font-medium text-gray-500">Email</span>
-                          <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <Mail className="w-4 h-4 text-gray-400" />
-                            <span className="text-sm text-gray-900">{selectedPaciente.email}</span>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <span className="text-sm font-medium text-gray-500">Telefone</span>
-                          <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                            <Phone className="w-4 h-4 text-gray-400" />
-                            <span className="text-sm text-gray-900">{selectedPaciente.telefone}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="text-sm font-medium text-gray-500">Observações Gerais</span>
-                        <p className="text-sm text-gray-700 mt-1 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                          {selectedPaciente.observacoes}
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-4">
-                        <Card className="border-l-4 border-l-orange-400 bg-white">
-                          <CardContent className="p-4 text-center">
-                            <Heart className={`w-8 h-8 mx-auto mb-2 ${getHumorColor(selectedPaciente.humorMedio)}`} />
-                            <p className="text-sm text-gray-600">Humor Médio</p>
-                            <p className={`text-xl font-bold ${getHumorColor(selectedPaciente.humorMedio)}`}>
-                              {selectedPaciente.humorMedio}/10
-                            </p>
-                          </CardContent>
-                        </Card>
-                        <Card className="border-l-4 border-l-blue-400 bg-white">
-                          <CardContent className="p-4 text-center">
-                            <FileText className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                            <p className="text-sm text-gray-600">Sessões Realizadas</p>
-                            <p className="text-xl font-bold text-gray-900">{selectedPaciente.sessoes}</p>
-                          </CardContent>
-                        </Card>
-                        <Card className="border-l-4 border-l-purple-400 bg-white">
-                          <CardContent className="p-4 text-center">
-                            <Clock className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                            <p className="text-sm text-gray-600">Próxima Consulta</p>
-                            <p className="text-sm font-medium text-gray-900">
-                              {new Date(selectedPaciente.proximaConsulta).toLocaleDateString('pt-BR')}
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </div>
-                  </ScrollArea>
-                </TabsContent>
-                
-                <TabsContent value="prontuario" className="h-full m-0">
-                  <ScrollArea className="h-full pr-4">
-                    <div className="space-y-6">
-                      <Card className="bg-white border-gray-200">
+                      {/* Dados Pessoais Expandidos */}
+                      <Card className="border-gray-200">
                         <CardHeader>
                           <CardTitle className="text-lg flex items-center gap-2 text-gray-900">
-                            <FileText className="w-5 h-5" />
-                            Informações Clínicas
+                            <User className="w-5 h-5" />
+                            Dados Pessoais Completos
                           </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-3 gap-4">
                             <div>
-                              <h4 className="font-medium text-gray-900 mb-2">Diagnóstico Principal</h4>
-                              <p className="text-sm text-gray-700 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                                {selectedPaciente.prontuario?.diagnostico || "Não informado"}
-                              </p>
+                              <span className="text-sm font-medium text-gray-500">Email</span>
+                              <div className="flex items-center gap-2 p-2 bg-gray-50 rounded border">
+                                <Mail className="w-4 h-4 text-gray-400" />
+                                <span className="text-sm text-gray-900">{selectedPaciente.email}</span>
+                              </div>
                             </div>
                             <div>
-                              <h4 className="font-medium text-gray-900 mb-2">Tratamento Atual</h4>
-                              <p className="text-sm text-gray-700 p-3 bg-green-50 rounded-lg border border-green-200">
-                                {selectedPaciente.prontuario?.tratamento || "Não informado"}
-                              </p>
+                              <span className="text-sm font-medium text-gray-500">Telefone</span>
+                              <div className="flex items-center gap-2 p-2 bg-gray-50 rounded border">
+                                <Phone className="w-4 h-4 text-gray-400" />
+                                <span className="text-sm text-gray-900">{selectedPaciente.phone}</span>
+                              </div>
+                            </div>
+                            <div>
+                              <span className="text-sm font-medium text-gray-500">CPF</span>
+                              <p className="text-sm text-gray-900 p-2 bg-gray-50 rounded border">{selectedPaciente.cpf}</p>
                             </div>
                           </div>
                           
-                          {selectedPaciente.prontuario?.medicamentos && selectedPaciente.prontuario.medicamentos.length > 0 && (
+                          <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <h4 className="font-medium text-gray-900 mb-2">Medicamentos Prescritos</h4>
+                              <span className="text-sm font-medium text-gray-500">Estado Civil</span>
+                              <p className="text-sm text-gray-900 p-2 bg-gray-50 rounded border">{selectedPaciente.maritalStatus}</p>
+                            </div>
+                            <div>
+                              <span className="text-sm font-medium text-gray-500">Escolaridade</span>
+                              <p className="text-sm text-gray-900 p-2 bg-gray-50 rounded border">{selectedPaciente.education}</p>
+                            </div>
+                          </div>
+
+                          {/* Endereço */}
+                          <div>
+                            <span className="text-sm font-medium text-gray-500">Endereço</span>
+                            <p className="text-sm text-gray-900 p-2 bg-gray-50 rounded border">
+                              {selectedPaciente.address.street}, {selectedPaciente.address.city} - {selectedPaciente.address.state}, {selectedPaciente.address.zipCode}
+                            </p>
+                          </div>
+
+                          {/* Contatos de Emergência */}
+                          <div>
+                            <span className="text-sm font-medium text-gray-500 mb-2 block">Contatos de Emergência</span>
+                            <div className="space-y-2">
+                              {selectedPaciente.contacts.map((contact) => (
+                                <div key={contact.id} className="flex items-center justify-between p-3 bg-gray-50 rounded border">
+                                  <div>
+                                    <p className="font-medium text-gray-900">{contact.name}</p>
+                                    <p className="text-sm text-gray-500">{contact.relationship} • {contact.phone}</p>
+                                  </div>
+                                  {contact.isEmergency && (
+                                    <Badge className="bg-red-100 text-red-800 border-red-200">
+                                      Emergência
+                                    </Badge>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Histórico Médico */}
+                      <Card className="border-gray-200">
+                        <CardHeader>
+                          <CardTitle className="text-lg flex items-center gap-2 text-gray-900">
+                            <Brain className="w-5 h-5" />
+                            Histórico Médico
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          {selectedPaciente.medicalHistory.allergies.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Alergias</h4>
                               <div className="flex flex-wrap gap-2">
-                                {selectedPaciente.prontuario.medicamentos.map((med, index) => (
-                                  <Badge key={index} className="bg-purple-100 text-purple-800 border border-purple-200">
+                                {selectedPaciente.medicalHistory.allergies.map((allergy, index) => (
+                                  <Badge key={index} className="bg-red-100 text-red-800 border-red-200">
+                                    {allergy}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {selectedPaciente.medicalHistory.currentMedications.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Medicamentos Atuais</h4>
+                              <div className="flex flex-wrap gap-2">
+                                {selectedPaciente.medicalHistory.currentMedications.map((med, index) => (
+                                  <Badge key={index} className="bg-blue-100 text-blue-800 border-blue-200">
                                     {med}
                                   </Badge>
                                 ))}
@@ -524,93 +516,74 @@ const Pacientes = () => {
                           )}
                         </CardContent>
                       </Card>
-
-                      <Card className="bg-white border-gray-200">
-                        <CardHeader>
-                          <CardTitle className="text-lg flex items-center gap-2 text-gray-900">
-                            <History className="w-5 h-5" />
-                            Evoluções Clínicas
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="max-h-96">
-                            <ScrollArea className="h-full pr-4">
-                              <div className="space-y-4">
-                                {selectedPaciente.prontuario?.evolucoes?.map((evolucao, index) => (
-                                  <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                                    <div className="flex justify-between items-start mb-3">
-                                      <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                          <User className="w-5 h-5 text-blue-600" />
-                                        </div>
-                                        <div>
-                                          <p className="font-medium text-gray-900">{evolucao.profissional}</p>
-                                          <div className="flex items-center gap-2">
-                                            <Badge className={`${getTipoConsultaColor(evolucao.tipo)} border`}>
-                                              {evolucao.tipo}
-                                            </Badge>
-                                            <span className="text-sm text-gray-500">{evolucao.data}</span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="flex items-center gap-1">
-                                        <Heart className={`w-4 h-4 ${getHumorColor(evolucao.humor)}`} />
-                                        <span className={`text-sm font-medium ${getHumorColor(evolucao.humor)}`}>
-                                          {evolucao.humor}/10
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <p className="text-sm text-gray-700 leading-relaxed">
-                                      {evolucao.observacoes}
-                                    </p>
-                                  </div>
-                                )) || (
-                                  <p className="text-center text-gray-500 py-8">
-                                    Nenhuma evolução registrada
-                                  </p>
-                                )}
-                              </div>
-                            </ScrollArea>
-                          </div>
-                        </CardContent>
-                      </Card>
                     </div>
                   </ScrollArea>
                 </TabsContent>
                 
-                <TabsContent value="evolucao" className="h-full m-0">
+                <TabsContent value="avaliacoes" className="h-full m-0">
+                  <PatientAssessments 
+                    assessments={selectedPaciente.assessments}
+                    onAddAssessment={(assessment) => {
+                      console.log('Adicionar avaliação:', assessment);
+                    }}
+                  />
+                </TabsContent>
+                
+                <TabsContent value="plano" className="h-full m-0">
+                  <TreatmentPlanManager 
+                    treatmentPlan={selectedPaciente.treatmentPlan}
+                    onUpdatePlan={(plan) => {
+                      console.log('Atualizar plano:', plan);
+                    }}
+                  />
+                </TabsContent>
+                
+                <TabsContent value="sessoes" className="h-full m-0">
+                  <SessionManager 
+                    sessions={selectedPaciente.sessions}
+                    onAddSession={(session) => {
+                      console.log('Adicionar sessão:', session);
+                    }}
+                    onUpdateSession={(sessionId, session) => {
+                      console.log('Atualizar sessão:', sessionId, session);
+                    }}
+                  />
+                </TabsContent>
+                
+                <TabsContent value="historico" className="h-full m-0">
                   <div className="text-center py-12">
-                    <TrendingUp className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <History className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      Gráfico de Evolução
+                      Histórico Completo
                     </h3>
                     <p className="text-gray-500 mb-4">
-                      Visualização da evolução do humor e progresso terapêutico ao longo do tempo
+                      Timeline completo de todas as interações, mudanças e evoluções
                     </p>
                     <Button variant="outline" className="border-gray-300">
-                      Gerar Relatório de Evolução
+                      Gerar Timeline Detalhado
                     </Button>
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="acoes" className="h-full m-0">
-                  <div className="grid grid-cols-2 gap-4">
-                    <Button className="h-20 flex flex-col gap-2 bg-blue-600 hover:bg-blue-700">
-                      <Calendar className="w-6 h-6" />
-                      <span>Agendar Consulta</span>
-                    </Button>
-                    <Button className="h-20 flex flex-col gap-2 border-gray-300" variant="outline">
-                      <FileText className="w-6 h-6" />
-                      <span>Nova Evolução</span>
-                    </Button>
-                    <Button className="h-20 flex flex-col gap-2 border-gray-300" variant="outline">
-                      <Mail className="w-6 h-6" />
-                      <span>Enviar Mensagem</span>
-                    </Button>
-                    <Button className="h-20 flex flex-col gap-2 border-gray-300" variant="outline">
-                      <AlertTriangle className="w-6 h-6" />
-                      <span>Marcar Urgente</span>
-                    </Button>
+                <TabsContent value="documentos" className="h-full m-0">
+                  <div className="text-center py-12">
+                    <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      Central de Documentos
+                    </h3>
+                    <p className="text-gray-500 mb-4">
+                      Laudos, atestados, exames e documentos do paciente
+                    </p>
+                    <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                      <Button variant="outline" className="border-gray-300">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Upload Documento
+                      </Button>
+                      <Button variant="outline" className="border-gray-300">
+                        <FileText className="w-4 h-4 mr-2" />
+                        Gerar Laudo
+                      </Button>
+                    </div>
                   </div>
                 </TabsContent>
               </div>
