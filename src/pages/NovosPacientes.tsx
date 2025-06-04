@@ -8,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   UserPlus, 
   Phone, 
@@ -100,15 +99,14 @@ const NovosPacientes = () => {
 
   const salvarPaciente = () => {
     console.log('Salvando paciente:', formData);
-    // Aqui integraria com o sistema
     navigate('/pacientes');
   };
 
-  const updateFormData = (field, value) => {
+  const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const updateNestedFormData = (parent, field, value) => {
+  const updateNestedFormData = (parent: string, field: string, value: any) => {
     setFormData(prev => ({
       ...prev,
       [parent]: { ...prev[parent], [field]: value }
@@ -130,7 +128,6 @@ const NovosPacientes = () => {
         </div>
       </div>
 
-      {/* Indicador de Progresso */}
       <Card className="bg-white">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between mb-4">
@@ -173,11 +170,10 @@ const NovosPacientes = () => {
         </CardContent>
       </Card>
 
-      {/* Formulário por Etapas */}
       <Card className="bg-white">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <steps[currentStep - 1].icon className="w-6 h-6" />
+            {React.createElement(steps[currentStep - 1].icon, { className: "w-6 h-6" })}
             {steps[currentStep - 1].title}
           </CardTitle>
           <CardDescription>
@@ -188,7 +184,6 @@ const NovosPacientes = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* Etapa 1: Dados Pessoais */}
           {currentStep === 1 && (
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
@@ -312,7 +307,6 @@ const NovosPacientes = () => {
             </div>
           )}
 
-          {/* Etapa 2: Contato e Endereço */}
           {currentStep === 2 && (
             <div className="space-y-6">
               <h3 className="text-lg font-medium">Informações de Contato</h3>
@@ -452,7 +446,6 @@ const NovosPacientes = () => {
             </div>
           )}
 
-          {/* Etapa 3: Dados Clínicos */}
           {currentStep === 3 && (
             <div className="space-y-6">
               <h3 className="text-lg font-medium">Informações Iniciais</h3>
@@ -583,7 +576,6 @@ const NovosPacientes = () => {
             </div>
           )}
 
-          {/* Etapa 4: Finalização */}
           {currentStep === 4 && (
             <div className="space-y-6">
               <div className="bg-gray-50 p-6 rounded-lg border">
@@ -656,7 +648,6 @@ const NovosPacientes = () => {
             </div>
           )}
 
-          {/* Botões de Navegação */}
           <div className="flex justify-between mt-8">
             {currentStep > 1 ? (
               <Button
@@ -666,7 +657,7 @@ const NovosPacientes = () => {
                 Anterior
               </Button>
             ) : (
-              <div /> // Espaço vazio para manter o layout
+              <div />
             )}
 
             {currentStep < 4 ? (
