@@ -42,7 +42,6 @@ const Layout = ({ children }: LayoutProps) => {
     setSidebarOpen,
   } = useAppStore();
 
-  // Detectar tipo de usuário do contexto de autenticação
   const userType = user?.type || 'servidor';
 
   const getMenuItems = () => {
@@ -54,10 +53,9 @@ const Layout = ({ children }: LayoutProps) => {
       case 'servidor':
         return [
           ...baseItems,
-          { icon: Calendar, label: 'Agendamentos', path: '/agendamentos' },
+          { icon: Calendar, label: 'Meus Agendamentos', path: '/agendamentos' },
           { icon: Heart, label: 'Termômetro', path: '/termometro' },
           { icon: MessageCircle, label: 'Chat Viva', path: '/chat-viva' },
-          { icon: User, label: 'Perfil', path: '/perfil' },
         ];
       
       case 'psicologo':
@@ -79,6 +77,7 @@ const Layout = ({ children }: LayoutProps) => {
         return [
           ...baseItems,
           { icon: Users, label: 'Usuários', path: '/usuarios' },
+          { icon: Users, label: 'Pacientes', path: '/pacientes' },
           { icon: Shield, label: 'Sistema', path: '/sistema' },
           { icon: BarChart3, label: 'Relatórios', path: '/relatorios' },
           { icon: Calendar, label: 'Agendamentos', path: '/agendamentos' },
@@ -162,6 +161,17 @@ const Layout = ({ children }: LayoutProps) => {
               <p className="text-xs text-gray-500">{user.email}</p>
             </div>
           )}
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start mb-2" 
+            onClick={() => {
+              navigate('/perfil');
+              setSidebarOpen(false);
+            }}
+          >
+            <User className="w-5 h-5 mr-3" />
+            Perfil
+          </Button>
           <Button variant="ghost" className="w-full justify-start text-red-600" onClick={handleLogout}>
             <LogOut className="w-5 h-5 mr-3" />
             Sair
@@ -206,9 +216,6 @@ const Layout = ({ children }: LayoutProps) => {
 
           <div className="flex items-center space-x-4">
             <NotificationCenter />
-            <Button variant="ghost" size="sm" onClick={() => navigate('/perfil')}>
-              <User className="w-5 h-5" />
-            </Button>
           </div>
         </div>
 

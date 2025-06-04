@@ -82,7 +82,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Simular login (em produção, fazer chamada real para API)
       const response = await simulateLogin(email, password);
       
       if (response.success) {
@@ -227,21 +226,59 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// Função simulada de login (substituir por implementação real)
+// Função simulada de login com múltiplos tipos de usuário
 const simulateLogin = async (email: string, password: string) => {
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simular delay de rede
+  await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Simular validação
-  if (email === 'admin@viva.com' && password === 'admin123') {
-    return {
-      success: true,
+  const users = {
+    'admin@viva.com': {
+      password: 'admin123',
       user: {
         id: '1',
         name: 'Administrador',
         email: 'admin@viva.com',
         type: 'admin',
         avatar: '',
-      },
+      }
+    },
+    'servidor@viva.com': {
+      password: 'servidor123',
+      user: {
+        id: '2',
+        name: 'João Silva',
+        email: 'servidor@viva.com',
+        type: 'servidor',
+        avatar: '',
+      }
+    },
+    'psicologo@viva.com': {
+      password: 'psicologo123',
+      user: {
+        id: '3',
+        name: 'Dra. Maria Santos',
+        email: 'psicologo@viva.com',
+        type: 'psicologo',
+        avatar: '',
+      }
+    },
+    'medico@viva.com': {
+      password: 'medico123',
+      user: {
+        id: '4',
+        name: 'Dr. Carlos Oliveira',
+        email: 'medico@viva.com',
+        type: 'medico',
+        avatar: '',
+      }
+    }
+  };
+
+  const userData = users[email as keyof typeof users];
+  
+  if (userData && userData.password === password) {
+    return {
+      success: true,
+      user: userData.user,
       token: 'fake-jwt-token-' + Date.now(),
       refreshToken: 'fake-refresh-token-' + Date.now(),
     };

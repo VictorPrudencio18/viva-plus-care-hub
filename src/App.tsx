@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
@@ -38,27 +39,113 @@ function App() {
           <Route index element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
-          <Route path="/pacientes" element={<Pacientes />} />
-          <Route path="/pacientes/novo" element={<NovosPacientes />} />
-          <Route path="/prontuarios" element={<Prontuarios />} />
-          <Route path="/prontuarios/novo" element={<NovoProntuario />} />
-          <Route path="/agendamentos" element={<Agendamentos />} />
-          <Route path="/agendamentos/novo" element={<NovoAgendamento />} />
-          <Route path="/lista-espera" element={<ListaEspera />} />
-          <Route path="/relatorios" element={<Relatorios />} />
-          <Route path="/avaliacoes" element={<Avaliacoes />} />
-          <Route path="/configuracoes" element={<Configuracoes />} />
-          <Route path="/chat-viva" element={<ChatViva />} />
-          <Route path="/termometro" element={<Termometro />} />
-          <Route path="/usuarios" element={<Usuarios />} />
-          <Route path="/sistema" element={<Sistema />} />
-          <Route path="/perfil" element={<Perfil />} />
           
-          {/* Dashboards */}
-          <Route path="/dashboard/psicologo" element={<PsicologoDashboard />} />
-          <Route path="/dashboard/medico" element={<MedicoDashboard />} />
-          <Route path="/dashboard/servidor" element={<ServidorDashboard />} />
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
+          {/* Rotas protegidas para todos os usuários autenticados */}
+          <Route path="/perfil" element={
+            <ProtectedRoute>
+              <Perfil />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat-viva" element={
+            <ProtectedRoute>
+              <ChatViva />
+            </ProtectedRoute>
+          } />
+          
+          {/* Dashboards específicos por tipo */}
+          <Route path="/dashboard/servidor" element={
+            <ProtectedRoute allowedTypes={['servidor']}>
+              <ServidorDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/psicologo" element={
+            <ProtectedRoute allowedTypes={['psicologo']}>
+              <PsicologoDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/medico" element={
+            <ProtectedRoute allowedTypes={['medico']}>
+              <MedicoDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/admin" element={
+            <ProtectedRoute allowedTypes={['admin']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
+          
+          {/* Rotas específicas para servidores */}
+          <Route path="/termometro" element={
+            <ProtectedRoute allowedTypes={['servidor']}>
+              <Termometro />
+            </ProtectedRoute>
+          } />
+          
+          {/* Rotas específicas para psicólogos e médicos */}
+          <Route path="/pacientes" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico', 'admin']}>
+              <Pacientes />
+            </ProtectedRoute>
+          } />
+          <Route path="/pacientes/novo" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
+              <NovosPacientes />
+            </ProtectedRoute>
+          } />
+          <Route path="/prontuarios" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
+              <Prontuarios />
+            </ProtectedRoute>
+          } />
+          <Route path="/prontuarios/novo" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
+              <NovoProntuario />
+            </ProtectedRoute>
+          } />
+          <Route path="/lista-espera" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
+              <ListaEspera />
+            </ProtectedRoute>
+          } />
+          <Route path="/avaliacoes" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
+              <Avaliacoes />
+            </ProtectedRoute>
+          } />
+          
+          {/* Rotas específicas para administradores */}
+          <Route path="/usuarios" element={
+            <ProtectedRoute allowedTypes={['admin']}>
+              <Usuarios />
+            </ProtectedRoute>
+          } />
+          <Route path="/sistema" element={
+            <ProtectedRoute allowedTypes={['admin']}>
+              <Sistema />
+            </ProtectedRoute>
+          } />
+          
+          {/* Rotas compartilhadas (com diferentes níveis de acesso) */}
+          <Route path="/agendamentos" element={
+            <ProtectedRoute>
+              <Agendamentos />
+            </ProtectedRoute>
+          } />
+          <Route path="/agendamentos/novo" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico', 'admin']}>
+              <NovoAgendamento />
+            </ProtectedRoute>
+          } />
+          <Route path="/relatorios" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico', 'admin']}>
+              <Relatorios />
+            </ProtectedRoute>
+          } />
+          <Route path="/configuracoes" element={
+            <ProtectedRoute allowedTypes={['psicologo', 'medico', 'admin']}>
+              <Configuracoes />
+            </ProtectedRoute>
+          } />
           
           <Route path="*" element={<NotFound />} />
         </Route>
