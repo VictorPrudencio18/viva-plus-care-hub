@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,13 +31,13 @@ interface ChartsTabProps {
 
 const ChartsTab: React.FC<ChartsTabProps> = ({ patient }) => {
   // Preparar dados para evolução do humor
-  const moodData = patient.sessions.map(session => ({
+  const moodData = (patient.sessions || []).map(session => ({
     date: new Date(session.date).toLocaleDateString('pt-BR'),
     humor: session.mood,
   })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   // Preparar dados para frequência de sessões por mês
-  const sessionsByMonth = patient.sessions.reduce((acc, session) => {
+  const sessionsByMonth = (patient.sessions || []).reduce((acc, session) => {
     const month = new Date(session.date).toLocaleDateString('pt-BR', { month: 'short' });
     
     if (!acc[month]) {
@@ -55,7 +56,7 @@ const ChartsTab: React.FC<ChartsTabProps> = ({ patient }) => {
   const sessionFrequencyData = Object.values(sessionsByMonth);
 
   // Preparar dados para avaliações
-  const assessmentData = patient.assessments.map(assessment => {
+  const assessmentData = (patient.assessments || []).map(assessment => {
     const score = (assessment.score / assessment.maxScore) * 100;
     return {
       name: assessment.type,
@@ -67,12 +68,18 @@ const ChartsTab: React.FC<ChartsTabProps> = ({ patient }) => {
   });
 
   // Dados para análise de progresso
+  const totalTechniques = (patient.sessions || []).reduce((acc, session) => {
+    return acc + (session.techniques ? session.techniques.length : 0);
+  }, 0);
+
+  const achievedObjectives = patient.treatmentPlan?.objectives?.filter(obj => obj.achieved)?.length || 0;
+
   const progressData = [
-    { area: 'Humor', score: patient.averageMood * 10, fullMark: 100 },
-    { area: 'Aderência', score: patient.adherenceRate, fullMark: 100 },
-    { area: 'Melhora', score: patient.improvementRate, fullMark: 100 },
-    { area: 'Técnicas', score: patient.sessions.reduce((acc, session) => acc + session.techniques.length, 0) > 0 ? 70 : 30, fullMark: 100 },
-    { area: 'Objetivos', score: patient.treatmentPlan?.objectives.filter(obj => obj.achieved).length || 0 * 20, fullMark: 100 },
+    { area: 'Humor', score: (patient.averageMood || 0) * 10, fullMark: 100 },
+    { area: 'Aderência', score: patient.adherenceRate || 0, fullMark: 100 },
+    { area: 'Melhora', score: patient.improvementRate || 0, fullMark: 100 },
+    { area: 'Técnicas', score: totalTechniques > 0 ? 70 : 30, fullMark: 100 },
+    { area: 'Objetivos', score: achievedObjectives * 20, fullMark: 100 },
   ];
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
