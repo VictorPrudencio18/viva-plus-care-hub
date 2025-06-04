@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select-improved";
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -33,56 +33,108 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-xl mx-auto mb-4 flex items-center justify-center">
-            <span className="text-white font-bold text-2xl">V+</span>
+    <div className="min-h-screen bg-gradient-therapeutic flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-therapeutic backdrop-blur-xl bg-white/95 border border-white/30">
+        <CardHeader className="text-center space-y-4">
+          <div className="w-20 h-20 bg-gradient-primary rounded-2xl mx-auto flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-3xl">V+</span>
           </div>
-          <CardTitle className="text-2xl font-bold">Entrar no Viva+</CardTitle>
-          <p className="text-gray-600">Acesse sua conta da plataforma de saúde</p>
+          <div className="space-y-2">
+            <CardTitle className="text-3xl font-bold text-gradient-modern">
+              Entrar no Viva+
+            </CardTitle>
+            <p className="text-neutral-600 text-sm leading-relaxed">
+              Acesse sua conta da plataforma de saúde mental
+            </p>
+          </div>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="userType">Tipo de Usuário</Label>
+        <CardContent className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="space-y-3">
+              <Label htmlFor="userType" className="text-sm font-semibold text-neutral-700">
+                Tipo de Usuário *
+              </Label>
               <Select value={userType} onValueChange={setUserType} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione seu perfil" />
+                <SelectTrigger id="userType">
+                  <SelectValue placeholder="Selecione seu perfil de acesso" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="servidor">Servidor Público</SelectItem>
-                  <SelectItem value="psicologo">Psicólogo</SelectItem>
-                  <SelectItem value="medico">Médico/Profissional</SelectItem>
-                  <SelectItem value="admin">Administrador</SelectItem>
+                  <SelectItem value="servidor">
+                    <div className="flex flex-col items-start">
+                      <span>Servidor Público</span>
+                      <span className="text-xs text-neutral-500">Acesso aos serviços de saúde</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="psicologo">
+                    <div className="flex flex-col items-start">
+                      <span>Psicólogo</span>
+                      <span className="text-xs text-neutral-500">Profissional de psicologia</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="medico">
+                    <div className="flex flex-col items-start">
+                      <span>Médico/Profissional</span>
+                      <span className="text-xs text-neutral-500">Profissional de saúde</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="admin">
+                    <div className="flex flex-col items-start">
+                      <span>Administrador</span>
+                      <span className="text-xs text-neutral-500">Gestão da plataforma</span>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
-              <Input id="email" type="email" placeholder="seu@email.com" required />
+            <div className="space-y-3">
+              <Label htmlFor="email" className="text-sm font-semibold text-neutral-700">
+                E-mail *
+              </Label>
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="seu@email.com" 
+                required 
+                className="h-12 rounded-xl border-2 border-neutral-200 bg-white/90 backdrop-blur-sm px-4 focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-200"
+              />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <Input id="password" type="password" placeholder="Sua senha" required />
+            <div className="space-y-3">
+              <Label htmlFor="password" className="text-sm font-semibold text-neutral-700">
+                Senha *
+              </Label>
+              <Input 
+                id="password" 
+                type="password" 
+                placeholder="Digite sua senha" 
+                required 
+                className="h-12 rounded-xl border-2 border-neutral-200 bg-white/90 backdrop-blur-sm px-4 focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-200"
+              />
             </div>
             
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
-              Entrar
+            <Button 
+              type="submit" 
+              className="w-full h-12 bg-gradient-primary hover:shadow-lg hover:scale-[1.02] transition-all duration-200 rounded-xl font-semibold text-white shadow-md"
+              disabled={!userType}
+            >
+              Entrar na Plataforma
             </Button>
             
-            <div className="text-center space-y-2">
-              <Button variant="link" type="button">
+            <div className="text-center space-y-3 pt-2">
+              <Button variant="link" type="button" className="text-primary hover:text-primary/80 transition-colors">
                 Esqueci minha senha
               </Button>
-              <p className="text-sm text-gray-600">
-                Não tem conta?{' '}
-                <Button variant="link" className="p-0 h-auto text-primary" onClick={() => navigate('/cadastro')}>
-                  Cadastre-se
+              <div className="flex items-center justify-center gap-1 text-sm text-neutral-600">
+                <span>Não tem conta?</span>
+                <Button 
+                  variant="link" 
+                  className="p-0 h-auto text-primary font-semibold hover:text-primary/80 transition-colors" 
+                  onClick={() => navigate('/cadastro')}
+                >
+                  Cadastre-se aqui
                 </Button>
-              </p>
+              </div>
             </div>
           </form>
         </CardContent>
