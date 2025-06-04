@@ -149,16 +149,19 @@ export const useFormValidation = <T>(schema: z.ZodSchema<T>) => {
   
   const validateField = (fieldName: string, value: unknown) => {
     try {
-      // Acessando o campo específico usando o método de extração seguro do Zod
-      const fieldSchema = schema.extract([fieldName as keyof z.TypeOf<typeof schema>]);
-      if (fieldSchema) {
-        fieldSchema.parse(value);
-        return { isValid: true, error: null };
-      }
+      // Criar um schema temporário para validar apenas o campo específico
+      const tempObject = { [fieldName]: value };
+      schema.partial().parse(tempObject);
       return { isValid: true, error: null };
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return { isValid: false, error: error.errors[0]?.message || 'Campo inválido' };
+        const fieldError = error.errors.find(err => 
+          err.path.includes(fieldName)
+        );
+        return { 
+          isValid: false, 
+          error: fieldError?.message || 'Campo inválido' 
+        };
       }
       return { isValid: false, error: 'Erro de validação' };
     }
