@@ -3,9 +3,12 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, Calendar, FileText, TrendingUp, Clock, AlertCircle } from "lucide-react";
+import { Users, Calendar, FileText, TrendingUp, Clock, AlertCircle, Plus, UserPlus, CalendarPlus, ClipboardList, BarChart3 } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 const PsicologoDashboard = () => {
+  const navigate = useNavigate();
+
   const pacientesRecentes = [
     { nome: "João Silva", ultimaConsulta: "2024-01-10", status: "acompanhamento", humor: 7 },
     { nome: "Maria Santos", ultimaConsulta: "2024-01-12", status: "primeira_consulta", humor: 4 },
@@ -16,6 +19,51 @@ const PsicologoDashboard = () => {
     { paciente: "Ana Oliveira", hora: "09:00", tipo: "Plantão Psicológico" },
     { paciente: "Carlos Ferreira", hora: "14:30", tipo: "Psicoterapia Breve" },
     { paciente: "Lucia Mendes", hora: "16:00", tipo: "Avaliação" },
+  ];
+
+  const acoesRapidas = [
+    {
+      titulo: "Novo Prontuário",
+      descricao: "Criar prontuário para novo paciente",
+      icone: FileText,
+      cor: "bg-blue-600 hover:bg-blue-700",
+      rota: "/prontuarios/novo"
+    },
+    {
+      titulo: "Agendar Consulta",
+      descricao: "Agendar nova consulta ou retorno",
+      icone: CalendarPlus,
+      cor: "bg-green-600 hover:bg-green-700",
+      rota: "/agendamentos/novo"
+    },
+    {
+      titulo: "Lista de Espera",
+      descricao: "Gerenciar pacientes em espera",
+      icone: Users,
+      cor: "bg-purple-600 hover:bg-purple-700",
+      rota: "/lista-espera"
+    },
+    {
+      titulo: "Relatórios",
+      descricao: "Gerar relatórios e estatísticas",
+      icone: BarChart3,
+      cor: "bg-orange-600 hover:bg-orange-700",
+      rota: "/relatorios"
+    },
+    {
+      titulo: "Avaliação Rápida",
+      descricao: "Aplicar escalas e questionários",
+      icone: ClipboardList,
+      cor: "bg-teal-600 hover:bg-teal-700",
+      rota: "/avaliacoes"
+    },
+    {
+      titulo: "Cadastro Paciente",
+      descricao: "Cadastrar novo paciente no sistema",
+      icone: UserPlus,
+      cor: "bg-indigo-600 hover:bg-indigo-700",
+      rota: "/pacientes/novo"
+    }
   ];
 
   return (
@@ -104,7 +152,7 @@ const PsicologoDashboard = () => {
                 </div>
               </div>
             ))}
-            <Button className="w-full mt-4" variant="outline">
+            <Button className="w-full mt-4" variant="outline" onClick={() => navigate('/agendamentos')}>
               Ver Agenda Completa
             </Button>
           </CardContent>
@@ -141,14 +189,14 @@ const PsicologoDashboard = () => {
                 </div>
               </div>
             ))}
-            <Button className="w-full mt-4" variant="outline">
+            <Button className="w-full mt-4" variant="outline" onClick={() => navigate('/pacientes')}>
               Ver Todos os Pacientes
             </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* Ações Rápidas */}
+      {/* Ações Rápidas Expandidas */}
       <Card>
         <CardHeader>
           <CardTitle>Ações Rápidas</CardTitle>
@@ -157,23 +205,20 @@ const PsicologoDashboard = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Button className="h-20 flex flex-col gap-2">
-              <FileText className="w-6 h-6" />
-              Novo Prontuário
-            </Button>
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
-              <Calendar className="w-6 h-6" />
-              Agendar Consulta
-            </Button>
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
-              <Users className="w-6 h-6" />
-              Lista de Espera
-            </Button>
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
-              <TrendingUp className="w-6 h-6" />
-              Relatórios
-            </Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {acoesRapidas.map((acao, index) => (
+              <Button
+                key={index}
+                className={`h-24 flex flex-col gap-2 text-white ${acao.cor}`}
+                onClick={() => navigate(acao.rota)}
+              >
+                <acao.icone className="w-6 h-6" />
+                <div className="text-center">
+                  <div className="font-medium">{acao.titulo}</div>
+                  <div className="text-xs opacity-90">{acao.descricao}</div>
+                </div>
+              </Button>
+            ))}
           </div>
         </CardContent>
       </Card>
