@@ -14,7 +14,7 @@
   }
   
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-gray-50 text-gray-900 font-inter;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
@@ -55,8 +55,8 @@
   }
   
   .hover-lift-modern:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
   }
   
   /* Bordas com gradiente */
@@ -73,15 +73,15 @@
   
   /* Sombras contextuais */
   .shadow-context-positive {
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
   }
   
   .shadow-context-warning {
-    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2);
+    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.15);
   }
   
   .shadow-context-urgent {
-    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.15);
   }
   
   /* Pulso suave */
@@ -95,8 +95,8 @@
       transform: scale(1);
     }
     50% {
-      opacity: 0.9;
-      transform: scale(1.02);
+      opacity: 0.95;
+      transform: scale(1.01);
     }
   }
   
@@ -110,7 +110,7 @@
       transform: translateY(0px);
     }
     50% {
-      transform: translateY(-10px);
+      transform: translateY(-6px);
     }
   }
   
@@ -119,9 +119,9 @@
     scroll-behavior: smooth;
   }
   
-  /* Backdrop blur customizado */
+  /* Backdrop blur customizado - reduzido */
   .backdrop-blur-modern {
-    backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(10px) saturate(150%);
   }
   
   /* Estados de foco terapêuticos */
@@ -132,30 +132,30 @@
 
 /* Classes de componentes modernos */
 @layer components {
-  /* Card moderno base */
+  /* Card moderno base - agora sólido */
   .card-modern {
-    @apply bg-white/80 backdrop-blur-xl border border-white/20 rounded-3xl shadow-xl;
-    @apply hover:shadow-2xl hover:-translate-y-2 transition-all duration-500;
+    @apply bg-white border border-gray-200 rounded-2xl shadow-md;
+    @apply hover:shadow-lg hover:-translate-y-1 transition-all duration-300;
   }
   
   /* Botão moderno base */
   .btn-modern {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl;
     @apply font-semibold text-sm transition-all duration-300;
     @apply focus-ring-modern hover:scale-105 active:scale-95;
   }
   
   /* Input moderno */
   .input-modern {
-    @apply bg-white/80 backdrop-blur-sm border border-white/30 rounded-2xl;
+    @apply bg-white border border-gray-300 rounded-xl;
     @apply px-4 py-3 text-gray-800 placeholder:text-gray-500;
-    @apply focus:border-blue-400/60 focus:bg-white/90 transition-all duration-300;
+    @apply focus:border-blue-400 focus:bg-white transition-all duration-300;
   }
   
   /* Badge moderno */
   .badge-modern {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-2xl;
-    @apply text-xs font-semibold backdrop-blur-sm;
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-xl;
+    @apply text-xs font-semibold border;
     @apply transition-all duration-300 hover:scale-105;
   }
 }
@@ -167,7 +167,7 @@
   }
   
   .card-mobile {
-    @apply rounded-2xl p-4;
+    @apply rounded-xl p-4;
   }
   
   .text-mobile {
