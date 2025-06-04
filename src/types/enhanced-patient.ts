@@ -1,11 +1,18 @@
-
-import { ComplexPatient, MedicalHistory, PatientContact, Assessment, TherapySession, TreatmentPlan } from './patient';
+import { ComplexPatient, PatientContact, Assessment, TherapySession, TreatmentPlan } from './patient';
 import { MedicalExam, Medication, Surgery, FamilyHistory, ScaleApplication } from './medical';
 
-export interface EnhancedMedicalHistory extends MedicalHistory {
+// Use composition instead of inheritance to avoid conflicts
+export interface EnhancedMedicalHistory {
+  // Keep compatible fields from base MedicalHistory
+  allergies: string[];
+  currentMedications: string[];
+  chronicConditions: string[];
+  surgeries: { date: string; procedure: string; hospital: string; }[];
+  
+  // Enhanced fields
   medicalExams: MedicalExam[];
   medications: Medication[];
-  surgeries: Surgery[];
+  detailedSurgeries: Surgery[];
   familyHistory: FamilyHistory[];
   hospitalizations: {
     id: string;
@@ -43,10 +50,24 @@ export interface PsychologicalProfile {
   resilenceFactors: string[];
 }
 
-export interface EnhancedTherapySession extends TherapySession {
+// Use composition for therapy sessions too
+export interface EnhancedTherapySession {
+  // Base session fields
+  id: string;
+  date: string;
+  duration: number;
+  type: 'individual' | 'group' | 'family' | 'online';
+  status: 'scheduled' | 'completed' | 'cancelled' | 'no-show';
+  mood: number;
+  notes: string;
+  interventions: string[];
+  nextSession?: string;
+  recordingUrl?: string;
+  
+  // Enhanced fields
   objectives: string[];
   techniques: string[];
-  homework: {
+  homeworkTasks: {
     description: string;
     completed: boolean;
     feedback?: string;
@@ -61,7 +82,7 @@ export interface EnhancedTherapySession extends TherapySession {
   };
 }
 
-export interface ComprehensivePatient extends ComplexPatient {
+export interface ComprehensivePatient extends Omit<ComplexPatient, 'medicalHistory' | 'sessions'> {
   medicalHistory: EnhancedMedicalHistory;
   psychologicalProfile: PsychologicalProfile;
   scaleApplications: ScaleApplication[];
