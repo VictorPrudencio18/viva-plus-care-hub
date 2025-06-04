@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,7 +20,9 @@ import {
   Phone,
   Mail,
   FileText,
-  Clock
+  Clock,
+  Edit,
+  Printer
 } from "lucide-react";
 
 const Pacientes = () => {
@@ -45,7 +46,35 @@ const Pacientes = () => {
       proximaConsulta: "2024-01-22",
       sessoes: 8,
       avatar: "/placeholder.svg",
-      observacoes: "Paciente apresenta sinais de ansiedade relacionada ao trabalho."
+      observacoes: "Paciente apresenta sinais de ansiedade relacionada ao trabalho.",
+      prontuario: {
+        diagnostico: "Transtorno de Ansiedade Generalizada",
+        tratamento: "Terapia Cognitivo-Comportamental",
+        medicamentos: ["Sertralina 50mg", "Alprazolam 0,25mg"],
+        evolucoes: [
+          {
+            data: "2024-01-15",
+            profissional: "Dr. Maria Santos",
+            tipo: "Consulta Psicológica",
+            observacoes: "Paciente relata melhora nos sintomas de ansiedade. Demonstra maior capacidade de enfrentamento em situações de estresse no trabalho.",
+            humor: 6
+          },
+          {
+            data: "2024-01-08",
+            profissional: "Dr. João Oliveira",
+            tipo: "Consulta Médica",
+            observacoes: "Ajuste de medicação. Paciente tolerando bem a sertralina. Redução gradual do alprazolam conforme planejado.",
+            humor: 5
+          },
+          {
+            data: "2024-01-01",
+            profissional: "Dr. Maria Santos",
+            tipo: "Consulta Psicológica",
+            observacoes: "Início da terapia CBT. Paciente motivado para o tratamento. Estabelecidos objetivos terapêuticos.",
+            humor: 4
+          }
+        ]
+      }
     },
     {
       id: 2,
@@ -62,7 +91,21 @@ const Pacientes = () => {
       proximaConsulta: "2024-01-19",
       sessoes: 5,
       avatar: "/placeholder.svg",
-      observacoes: "Boa evolução no tratamento. Paciente engajada."
+      observacoes: "Boa evolução no tratamento. Paciente engajada.",
+      prontuario: {
+        diagnostico: "Episódio Depressivo Leve",
+        tratamento: "Psicoterapia de Apoio",
+        medicamentos: [],
+        evolucoes: [
+          {
+            data: "2024-01-12",
+            profissional: "Dr. Maria Santos",
+            tipo: "Consulta Psicológica",
+            observacoes: "Excelente progresso. Paciente demonstra maior autoestima e motivação para atividades do dia a dia.",
+            humor: 7
+          }
+        ]
+      }
     },
     {
       id: 3,
@@ -131,6 +174,16 @@ const Pacientes = () => {
     if (humor <= 3) return 'text-red-600';
     if (humor <= 6) return 'text-yellow-600';
     return 'text-green-600';
+  };
+
+  const getTipoConsultaColor = (tipo: string) => {
+    const colors = {
+      'Consulta Psicológica': 'bg-blue-100 text-blue-800',
+      'Consulta Médica': 'bg-green-100 text-green-800',
+      'Consulta Psiquiátrica': 'bg-purple-100 text-purple-800',
+      'Sessão Terapêutica': 'bg-orange-100 text-orange-800'
+    };
+    return colors[tipo] || 'bg-gray-100 text-gray-800';
   };
 
   return (
@@ -317,133 +370,233 @@ const Pacientes = () => {
         ))}
       </div>
 
-      {/* Dialog de Detalhes do Paciente */}
+      {/* Dialog de Detalhes do Paciente - DESIGN MELHORADO */}
       {selectedPaciente && (
         <Dialog open={!!selectedPaciente} onOpenChange={() => setSelectedPaciente(null)}>
-          <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Detalhes do Paciente</DialogTitle>
+          <DialogContent className="sm:max-w-[900px] max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader className="pb-4 border-b">
+              <DialogTitle className="text-xl">Prontuário Completo</DialogTitle>
             </DialogHeader>
-            <Tabs defaultValue="resumo" className="w-full">
+            
+            {/* Header do Paciente */}
+            <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+              <Avatar className="w-16 h-16">
+                <AvatarImage src={selectedPaciente.avatar} />
+                <AvatarFallback className="text-lg font-semibold">
+                  {selectedPaciente.nome.split(' ').map(n => n[0]).join('')}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-gray-900">{selectedPaciente.nome}</h3>
+                <p className="text-gray-600">{selectedPaciente.cargo} - {selectedPaciente.departamento}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge className={getStatusColor(selectedPaciente.status)}>
+                    {selectedPaciente.status}
+                  </Badge>
+                  <span className="text-sm text-gray-500">
+                    ID: #{selectedPaciente.id.toString().padStart(4, '0')}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline">
+                  <Edit className="w-4 h-4 mr-1" />
+                  Editar
+                </Button>
+                <Button size="sm" variant="outline">
+                  <Printer className="w-4 h-4 mr-1" />
+                  Imprimir
+                </Button>
+              </div>
+            </div>
+
+            <Tabs defaultValue="resumo" className="flex-1 overflow-hidden">
               <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="resumo">Resumo</TabsTrigger>
-                <TabsTrigger value="historico">Histórico</TabsTrigger>
+                <TabsTrigger value="prontuario">Prontuário</TabsTrigger>
                 <TabsTrigger value="evolucao">Evolução</TabsTrigger>
                 <TabsTrigger value="acoes">Ações</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="resumo" className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <Avatar className="w-16 h-16">
-                    <AvatarImage src={selectedPaciente.avatar} />
-                    <AvatarFallback>
-                      {selectedPaciente.nome.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
+              <div className="overflow-y-auto flex-1 mt-4">
+                <TabsContent value="resumo" className="space-y-4 m-0">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <span className="text-sm font-medium text-gray-500">Email</span>
+                      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                        <Mail className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm">{selectedPaciente.email}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <span className="text-sm font-medium text-gray-500">Telefone</span>
+                      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                        <Phone className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm">{selectedPaciente.telefone}</span>
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
-                    <h3 className="text-xl font-bold">{selectedPaciente.nome}</h3>
-                    <p className="text-gray-600">{selectedPaciente.cargo} - {selectedPaciente.departamento}</p>
-                    <Badge className={getStatusColor(selectedPaciente.status)}>
-                      {selectedPaciente.status}
-                    </Badge>
+                    <span className="text-sm font-medium text-gray-500">Observações Gerais</span>
+                    <p className="text-sm text-gray-700 mt-1 p-3 bg-yellow-50 rounded border-l-4 border-yellow-300">
+                      {selectedPaciente.observacoes}
+                    </p>
                   </div>
-                </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <Card className="border-l-4 border-l-orange-400">
+                      <CardContent className="p-4 text-center">
+                        <Heart className={`w-8 h-8 mx-auto mb-2 ${getHumorColor(selectedPaciente.humorMedio)}`} />
+                        <p className="text-sm text-gray-600">Humor Médio</p>
+                        <p className={`text-xl font-bold ${getHumorColor(selectedPaciente.humorMedio)}`}>
+                          {selectedPaciente.humorMedio}/10
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <Card className="border-l-4 border-l-blue-400">
+                      <CardContent className="p-4 text-center">
+                        <FileText className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                        <p className="text-sm text-gray-600">Sessões Realizadas</p>
+                        <p className="text-xl font-bold">{selectedPaciente.sessoes}</p>
+                      </CardContent>
+                    </Card>
+                    <Card className="border-l-4 border-l-purple-400">
+                      <CardContent className="p-4 text-center">
+                        <Clock className="w-8 h-8 mx-auto mb-2 text-purple-600" />
+                        <p className="text-sm text-gray-600">Próxima Consulta</p>
+                        <p className="text-sm font-medium">
+                          {new Date(selectedPaciente.proximaConsulta).toLocaleDateString('pt-BR')}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <span className="text-sm font-medium">Email</span>
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm">{selectedPaciente.email}</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <span className="text-sm font-medium">Telefone</span>
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm">{selectedPaciente.telefone}</span>
-                    </div>
-                  </div>
-                </div>
+                <TabsContent value="prontuario" className="space-y-6 m-0">
+                  {/* Informações Clínicas */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <FileText className="w-5 h-5" />
+                        Informações Clínicas
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">Diagnóstico Principal</h4>
+                          <p className="text-sm text-gray-700 p-3 bg-blue-50 rounded border-l-4 border-blue-400">
+                            {selectedPaciente.prontuario?.diagnostico || "Não informado"}
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">Tratamento Atual</h4>
+                          <p className="text-sm text-gray-700 p-3 bg-green-50 rounded border-l-4 border-green-400">
+                            {selectedPaciente.prontuario?.tratamento || "Não informado"}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {selectedPaciente.prontuario?.medicamentos && selectedPaciente.prontuario.medicamentos.length > 0 && (
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">Medicamentos Prescritos</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedPaciente.prontuario.medicamentos.map((med, index) => (
+                              <Badge key={index} variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+                                {med}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
 
-                <div>
-                  <span className="text-sm font-medium">Observações</span>
-                  <p className="text-sm text-gray-600 mt-1">{selectedPaciente.observacoes}</p>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
+                  {/* Evoluções Recentes */}
                   <Card>
-                    <CardContent className="p-4 text-center">
-                      <Heart className={`w-8 h-8 mx-auto mb-2 ${getHumorColor(selectedPaciente.humorMedio)}`} />
-                      <p className="text-sm text-gray-600">Humor Médio</p>
-                      <p className={`text-xl font-bold ${getHumorColor(selectedPaciente.humorMedio)}`}>
-                        {selectedPaciente.humorMedio}/10
-                      </p>
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <History className="w-5 h-5" />
+                        Evoluções Clínicas
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {selectedPaciente.prontuario?.evolucoes?.map((evolucao, index) => (
+                          <div key={index} className="border rounded-lg p-4 bg-gray-50">
+                            <div className="flex justify-between items-start mb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                  <User className="w-5 h-5 text-blue-600" />
+                                </div>
+                                <div>
+                                  <p className="font-medium text-gray-900">{evolucao.profissional}</p>
+                                  <div className="flex items-center gap-2">
+                                    <Badge className={getTipoConsultaColor(evolucao.tipo)}>
+                                      {evolucao.tipo}
+                                    </Badge>
+                                    <span className="text-sm text-gray-500">{evolucao.data}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Heart className={`w-4 h-4 ${getHumorColor(evolucao.humor)}`} />
+                                <span className={`text-sm font-medium ${getHumorColor(evolucao.humor)}`}>
+                                  {evolucao.humor}/10
+                                </span>
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-700 leading-relaxed">
+                              {evolucao.observacoes}
+                            </p>
+                          </div>
+                        )) || (
+                          <p className="text-center text-gray-500 py-8">
+                            Nenhuma evolução registrada
+                          </p>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
-                  <Card>
-                    <CardContent className="p-4 text-center">
-                      <FileText className="w-8 h-8 mx-auto mb-2 text-blue-600" />
-                      <p className="text-sm text-gray-600">Sessões</p>
-                      <p className="text-xl font-bold">{selectedPaciente.sessoes}</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-4 text-center">
-                      <Clock className="w-8 h-8 mx-auto mb-2 text-purple-600" />
-                      <p className="text-sm text-gray-600">Próxima Consulta</p>
-                      <p className="text-sm font-medium">
-                        {new Date(selectedPaciente.proximaConsulta).toLocaleDateString('pt-BR')}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="historico">
-                <div className="text-center py-8">
-                  <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Histórico de Consultas
-                  </h3>
-                  <p className="text-gray-500">
-                    Histórico detalhado das sessões aparecerá aqui
-                  </p>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="evolucao">
-                <div className="text-center py-8">
-                  <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Gráfico de Evolução
-                  </h3>
-                  <p className="text-gray-500">
-                    Evolução do humor e progresso terapêutico
-                  </p>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="acoes">
-                <div className="grid grid-cols-2 gap-4">
-                  <Button className="h-20 flex flex-col gap-2">
-                    <Calendar className="w-6 h-6" />
-                    Agendar Consulta
-                  </Button>
-                  <Button className="h-20 flex flex-col gap-2" variant="outline">
-                    <FileText className="w-6 h-6" />
-                    Ver Prontuário
-                  </Button>
-                  <Button className="h-20 flex flex-col gap-2" variant="outline">
-                    <Mail className="w-6 h-6" />
-                    Enviar Mensagem
-                  </Button>
-                  <Button className="h-20 flex flex-col gap-2" variant="outline">
-                    <AlertTriangle className="w-6 h-6" />
-                    Marcar Urgente
-                  </Button>
-                </div>
-              </TabsContent>
+                </TabsContent>
+                
+                <TabsContent value="evolucao" className="m-0">
+                  <div className="text-center py-12">
+                    <TrendingUp className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      Gráfico de Evolução
+                    </h3>
+                    <p className="text-gray-500 mb-4">
+                      Visualização da evolução do humor e progresso terapêutico ao longo do tempo
+                    </p>
+                    <Button variant="outline">
+                      Gerar Relatório de Evolução
+                    </Button>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="acoes" className="m-0">
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button className="h-20 flex flex-col gap-2 bg-blue-600 hover:bg-blue-700">
+                      <Calendar className="w-6 h-6" />
+                      <span>Agendar Consulta</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col gap-2" variant="outline">
+                      <FileText className="w-6 h-6" />
+                      <span>Nova Evolução</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col gap-2" variant="outline">
+                      <Mail className="w-6 h-6" />
+                      <span>Enviar Mensagem</span>
+                    </Button>
+                    <Button className="h-20 flex flex-col gap-2" variant="outline">
+                      <AlertTriangle className="w-6 h-6" />
+                      <span>Marcar Urgente</span>
+                    </Button>
+                  </div>
+                </TabsContent>
+              </div>
             </Tabs>
           </DialogContent>
         </Dialog>
