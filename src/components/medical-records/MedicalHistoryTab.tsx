@@ -60,34 +60,32 @@ const MedicalHistoryTab: React.FC<MedicalHistoryTabProps> = ({ patient }) => {
         </TabsList>
 
         <TabsContent value="medications" className="space-y-4">
-          <div className="grid gap-4">
-            <Card className="border-green-200 bg-green-50">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-green-800">
-                  <Pill className="w-5 h-5" />
-                  Medicações Atuais ({patient.medicalHistory.currentMedications.length})
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {patient.medicalHistory.currentMedications.map((medication, index) => (
-                    <div key={index} className="flex justify-between items-center p-3 bg-white rounded-lg border border-green-200">
-                      <div>
-                        <h4 className="font-medium text-gray-900">{medication}</h4>
-                        <p className="text-sm text-gray-600">Ativo desde início do tratamento</p>
-                      </div>
-                      <Badge className="bg-green-100 text-green-800 border-green-200">
-                        Ativo
-                      </Badge>
+          <Card className="border-green-200 bg-green-50">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-green-800">
+                <Pill className="w-5 h-5" />
+                Medicações Atuais ({patient.medicalHistory.currentMedications.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {patient.medicalHistory.currentMedications.map((medication, index) => (
+                  <div key={index} className="flex justify-between items-center p-3 bg-white rounded-lg border border-green-200">
+                    <div>
+                      <h4 className="font-medium text-gray-900">{medication}</h4>
+                      <p className="text-sm text-gray-600">Ativo desde início do tratamento</p>
                     </div>
-                  ))}
-                  {patient.medicalHistory.currentMedications.length === 0 && (
-                    <p className="text-gray-500 text-center py-4">Nenhuma medicação atual registrada</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                    <Badge className="bg-green-100 text-green-800 border-green-200">
+                      Ativo
+                    </Badge>
+                  </div>
+                ))}
+                {patient.medicalHistory.currentMedications.length === 0 && (
+                  <p className="text-gray-500 text-center py-4">Nenhuma medicação atual registrada</p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="allergies" className="space-y-4">
@@ -158,25 +156,30 @@ const MedicalHistoryTab: React.FC<MedicalHistoryTabProps> = ({ patient }) => {
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-blue-800">
                 <Users className="w-5 h-5" />
-                Histórico Familiar ({patient.medicalHistory.familyHistory.length})
+                Histórico Familiar ({patient.medicalHistory.familyHistory?.length || 0})
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {patient.medicalHistory.familyHistory.map((family, index) => (
-                  <div key={index} className="p-3 bg-white rounded-lg border border-blue-200">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h4 className="font-medium text-gray-900">{family}</h4>
-                        <p className="text-sm text-gray-600">Histórico familiar</p>
+                {patient.medicalHistory.familyHistory && patient.medicalHistory.familyHistory.length > 0 ? (
+                  patient.medicalHistory.familyHistory.map((family, index) => (
+                    <div key={index} className="p-3 bg-white rounded-lg border border-blue-200">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <h4 className="font-medium text-gray-900">
+                            {typeof family === 'string' ? family : family.condition}
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            {typeof family === 'string' ? 'Histórico familiar' : `${family.relationship} - ${family.status}`}
+                          </p>
+                        </div>
+                        <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                          Familiar
+                        </Badge>
                       </div>
-                      <Badge className="bg-blue-100 text-blue-800 border-blue-200">
-                        Familiar
-                      </Badge>
                     </div>
-                  </div>
-                ))}
-                {patient.medicalHistory.familyHistory.length === 0 && (
+                  ))
+                ) : (
                   <p className="text-gray-500 text-center py-4">Nenhum histórico familiar registrado</p>
                 )}
               </div>

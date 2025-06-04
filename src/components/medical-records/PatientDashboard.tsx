@@ -13,11 +13,14 @@ import {
   TrendingUp,
   Shield,
   Phone,
-  Mail
+  Mail,
+  BarChart3
 } from "lucide-react";
 import { ComprehensivePatient } from '@/types/enhanced-patient';
 import MedicalHistoryTab from './MedicalHistoryTab';
 import SessionsTab from './SessionsTab';
+import AssessmentsTab from './AssessmentsTab';
+import ChartsTab from './ChartsTab';
 
 interface PatientDashboardProps {
   patient: ComprehensivePatient;
@@ -197,7 +200,7 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ patient, onUpdatePa
           <TabsTrigger value="history">Histórico</TabsTrigger>
           <TabsTrigger value="sessions">Sessões</TabsTrigger>
           <TabsTrigger value="assessments">Avaliações</TabsTrigger>
-          <TabsTrigger value="treatment">Tratamento</TabsTrigger>
+          <TabsTrigger value="charts">Gráficos</TabsTrigger>
           <TabsTrigger value="documents">Documentos</TabsTrigger>
         </TabsList>
 
@@ -344,27 +347,11 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ patient, onUpdatePa
         </TabsContent>
 
         <TabsContent value="assessments">
-          <div className="text-center py-12">
-            <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Avaliações Psicológicas
-            </h3>
-            <p className="text-gray-500">
-              Seção em desenvolvimento - Escalas e instrumentos aplicados
-            </p>
-          </div>
+          <AssessmentsTab patient={patient} onUpdatePatient={onUpdatePatient} />
         </TabsContent>
 
-        <TabsContent value="treatment">
-          <div className="text-center py-12">
-            <Shield className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Plano de Tratamento
-            </h3>
-            <p className="text-gray-500">
-              Seção em desenvolvimento - Objetivos e estratégias terapêuticas
-            </p>
-          </div>
+        <TabsContent value="charts">
+          <ChartsTab patient={patient} />
         </TabsContent>
 
         <TabsContent value="documents">
