@@ -79,7 +79,7 @@ const SchedulingFilters: React.FC<SchedulingFiltersProps> = ({
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 {professionals.map((prof) => (
                   <SelectItem key={prof} value={prof}>{prof}</SelectItem>
                 ))}
@@ -94,7 +94,7 @@ const SchedulingFilters: React.FC<SchedulingFiltersProps> = ({
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="scheduled">Agendado</SelectItem>
                 <SelectItem value="confirmed">Confirmado</SelectItem>
                 <SelectItem value="in-progress">Em Andamento</SelectItem>
@@ -112,7 +112,7 @@ const SchedulingFilters: React.FC<SchedulingFiltersProps> = ({
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 {appointmentTypes.map((type) => (
                   <SelectItem key={type} value={type}>{type}</SelectItem>
                 ))}
@@ -127,7 +127,7 @@ const SchedulingFilters: React.FC<SchedulingFiltersProps> = ({
                 <SelectValue placeholder="Todas" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todas</SelectItem>
+                <SelectItem value="all">Todas</SelectItem>
                 <SelectItem value="presencial">Presencial</SelectItem>
                 <SelectItem value="online">Online</SelectItem>
                 <SelectItem value="hibrido">Híbrido</SelectItem>
@@ -142,7 +142,7 @@ const SchedulingFilters: React.FC<SchedulingFiltersProps> = ({
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="today">Hoje</SelectItem>
                 <SelectItem value="week">Esta Semana</SelectItem>
                 <SelectItem value="month">Este Mês</SelectItem>

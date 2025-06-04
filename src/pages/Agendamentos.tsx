@@ -112,10 +112,10 @@ const Agendamentos = () => {
         appointment.patient.toLowerCase().includes(filters.search.toLowerCase()) ||
         appointment.professional.toLowerCase().includes(filters.search.toLowerCase());
       
-      const matchesProfessional = !filters.professional || appointment.professional === filters.professional;
-      const matchesStatus = !filters.status || appointment.status === filters.status;
-      const matchesType = !filters.type || appointment.type === filters.type;
-      const matchesModality = !filters.modality || appointment.modality === filters.modality;
+      const matchesProfessional = !filters.professional || filters.professional === 'all' || appointment.professional === filters.professional;
+      const matchesStatus = !filters.status || filters.status === 'all' || appointment.status === filters.status;
+      const matchesType = !filters.type || filters.type === 'all' || appointment.type === filters.type;
+      const matchesModality = !filters.modality || filters.modality === 'all' || appointment.modality === filters.modality;
       
       // Date range filtering
       const today = new Date();
