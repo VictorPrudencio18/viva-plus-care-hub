@@ -187,6 +187,56 @@ const App: React.FC = () => {
                   </ProtectedRoute>
                 } />
 
+                {/* Admin Pages */}
+                <Route path="/usuarios" element={
+                  <ProtectedRoute userType="admin">
+                    <div className="min-h-screen bg-gray-50">
+                      <Layout userType="admin">
+                        <React.Suspense fallback={<LoadingPage message="Carregando usuários..." />}>
+                          {React.lazy(() => import('./pages/Usuarios'))().then(module => ({ default: module.default }))}
+                        </React.Suspense>
+                      </Layout>
+                    </div>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/sistema" element={
+                  <ProtectedRoute userType="admin">
+                    <div className="min-h-screen bg-gray-50">
+                      <Layout userType="admin">
+                        <React.Suspense fallback={<LoadingPage message="Carregando sistema..." />}>
+                          {React.lazy(() => import('./pages/Sistema'))().then(module => ({ default: module.default }))}
+                        </React.Suspense>
+                      </Layout>
+                    </div>
+                  </ProtectedRoute>
+                } />
+
+                {/* Professional Pages */}
+                <Route path="/pacientes" element={
+                  <ProtectedRoute userType="psicologo">
+                    <div className="min-h-screen bg-gray-50">
+                      <Layout userType="psicologo">
+                        <React.Suspense fallback={<LoadingPage message="Carregando pacientes..." />}>
+                          {React.lazy(() => import('./pages/Pacientes'))().then(module => ({ default: module.default }))}
+                        </React.Suspense>
+                      </Layout>
+                    </div>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/configuracoes" element={
+                  <ProtectedRoute userType="psicologo">
+                    <div className="min-h-screen bg-gray-50">
+                      <Layout userType="psicologo">
+                        <React.Suspense fallback={<LoadingPage message="Carregando configurações..." />}>
+                          {React.lazy(() => import('./pages/Configuracoes'))().then(module => ({ default: module.default }))}
+                        </React.Suspense>
+                      </Layout>
+                    </div>
+                  </ProtectedRoute>
+                } />
+
                 {/* Catch-all route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
