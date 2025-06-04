@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,11 +14,13 @@ import {
   Plus,
   Calendar,
   Clock,
-  Heart
+  Heart,
+  Bell
 } from "lucide-react";
 import { usePatientStore } from '@/store/patientStore';
 import PatientDashboard from './PatientDashboard';
 import { ComprehensivePatient } from '@/types/enhanced-patient';
+import { Link } from 'react-router-dom';
 
 const MedicalRecordsDashboard = () => {
   const { patients, selectedPatient, setSelectedPatient } = usePatientStore();
@@ -100,6 +101,28 @@ const MedicalRecordsDashboard = () => {
     setSelectedPatient(updatedPatient);
     // Aqui você poderia também atualizar no store se necessário
   };
+
+  // Calculate all active alerts across all patients
+  const getAllActiveAlerts = () => {
+    return patients.reduce((allAlerts, patient) => {
+      const patientData = convertToComprehensive(patient);
+      const activeAlerts = patientData.alerts?.filter(alert => alert.active) || [];
+      
+      return [
+        ...allAlerts,
+        ...activeAlerts.map(alert => ({
+          ...alert,
+          patientId: patient.id,
+          patientName: patient.name
+        }))
+      ];
+    }, [] as any[]).sort((a, b) => {
+      const severityMap = { critical: 4, high: 3, medium: 2, low: 1 };
+      return severityMap[b.severity as keyof typeof severityMap] - severityMap[a.severity as keyof typeof severityMap];
+    }).slice(0, 5);
+  };
+
+  const recentAlerts = getAllActiveAlerts();
 
   if (selectedPatient) {
     return (
@@ -185,6 +208,57 @@ const MedicalRecordsDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Recent Alerts */}
+      {recentAlerts.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="w-5 h-5" />
+              Alertas Recentes
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {recentAlerts.map((alert, index) => {
+                const getSeverityColor = (severity: string) => {
+                  switch (severity) {
+                    case 'critical': return 'bg-red-100 text-red-800 border-red-200';
+                    case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
+                    case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+                    case 'low': return 'bg-green-100 text-green-800 border-green-200';
+                    default: return 'bg-gray-100 text-gray-800 border-gray-200';
+                  }
+                };
+
+                return (
+                  <div 
+                    key={index} 
+                    className="p-3 border rounded-md hover:bg-gray-50 cursor-pointer"
+                    onClick={() => {
+                      const patient = patients.find(p => p.id === alert.patientId);
+                      if (patient) handlePatientSelect(patient);
+                    }}
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <AlertTriangle className={`w-5 h-5 ${alert.severity === 'critical' ? 'text-red-500' : alert.severity === 'high' ? 'text-orange-500' : 'text-yellow-500'}`} />
+                        <div>
+                          <p className="font-medium">{alert.message}</p>
+                          <p className="text-sm text-gray-600">Paciente: {alert.patientName}</p>
+                        </div>
+                      </div>
+                      <Badge className={`capitalize ${getSeverityColor(alert.severity)}`}>
+                        {alert.severity}
+                      </Badge>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Filtros e Busca */}
       <Card>
@@ -317,6 +391,16 @@ const MedicalRecordsDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Link to Reports */}
+      <div className="flex justify-end">
+        <Link to="/relatorios">
+          <Button variant="outline" className="flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            Ver Relatórios Gerenciais
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };

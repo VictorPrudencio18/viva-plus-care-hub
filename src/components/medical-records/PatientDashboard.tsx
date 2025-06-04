@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,13 +15,18 @@ import {
   Shield,
   Phone,
   Mail,
-  BarChart3
+  BarChart3,
+  FileBarChart,
+  FilePlus
 } from "lucide-react";
 import { ComprehensivePatient } from '@/types/enhanced-patient';
 import MedicalHistoryTab from './MedicalHistoryTab';
 import SessionsTab from './SessionsTab';
 import AssessmentsTab from './AssessmentsTab';
 import ChartsTab from './ChartsTab';
+import DocumentsTab from './DocumentsTab';
+import AlertsManager from './AlertsManager';
+import ReportsGenerator from './ReportsGenerator';
 
 interface PatientDashboardProps {
   patient: ComprehensivePatient;
@@ -195,13 +201,15 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ patient, onUpdatePa
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="history">Histórico</TabsTrigger>
           <TabsTrigger value="sessions">Sessões</TabsTrigger>
           <TabsTrigger value="assessments">Avaliações</TabsTrigger>
           <TabsTrigger value="charts">Gráficos</TabsTrigger>
           <TabsTrigger value="documents">Documentos</TabsTrigger>
+          <TabsTrigger value="alerts">Alertas</TabsTrigger>
+          <TabsTrigger value="reports">Relatórios</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -355,15 +363,15 @@ const PatientDashboard: React.FC<PatientDashboardProps> = ({ patient, onUpdatePa
         </TabsContent>
 
         <TabsContent value="documents">
-          <div className="text-center py-12">
-            <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Documentos e Anexos
-            </h3>
-            <p className="text-gray-500">
-              Seção em desenvolvimento - Documentos, exames e relatórios
-            </p>
-          </div>
+          <DocumentsTab patient={patient} onUpdatePatient={onUpdatePatient} />
+        </TabsContent>
+
+        <TabsContent value="alerts">
+          <AlertsManager patient={patient} onUpdatePatient={onUpdatePatient} />
+        </TabsContent>
+
+        <TabsContent value="reports">
+          <ReportsGenerator patient={patient} />
         </TabsContent>
       </Tabs>
     </div>
