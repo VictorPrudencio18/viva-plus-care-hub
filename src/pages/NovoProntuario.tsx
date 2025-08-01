@@ -100,14 +100,14 @@ const NovoProntuario = () => {
   const salvarProntuario = () => {
     console.log('Salvando prontuário:', formData);
     // Aqui seria a lógica para salvar no sistema
-    navigate('/pacientes');
+    navigate('/app/pacientes');
   };
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => navigate('/dashboard/psicologo')}>
+          <Button variant="outline" onClick={() => navigate('/app/dashboard/psicologo')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar
           </Button>

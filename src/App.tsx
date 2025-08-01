@@ -35,120 +35,123 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout><Outlet /></Layout>}>
-          <Route index element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cadastro" element={<Cadastro />} />
-          
+        {/* Rotas Públicas - SEM Layout administrativo */}
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        
+        {/* Rotas Protegidas - COM Layout administrativo */}
+        <Route path="/app/*" element={<Layout><Outlet /></Layout>}>
           {/* Rotas protegidas para todos os usuários autenticados */}
-          <Route path="/perfil" element={
+          <Route path="perfil" element={
             <ProtectedRoute>
               <Perfil />
             </ProtectedRoute>
           } />
-          <Route path="/chat-viva" element={
+          <Route path="chat-viva" element={
             <ProtectedRoute>
               <ChatViva />
             </ProtectedRoute>
           } />
           
           {/* Dashboards específicos por tipo */}
-          <Route path="/dashboard/servidor" element={
+          <Route path="dashboard/servidor" element={
             <ProtectedRoute allowedTypes={['servidor']}>
               <ServidorDashboard />
             </ProtectedRoute>
           } />
-          <Route path="/dashboard/psicologo" element={
+          <Route path="dashboard/psicologo" element={
             <ProtectedRoute allowedTypes={['psicologo']}>
               <PsicologoDashboard />
             </ProtectedRoute>
           } />
-          <Route path="/dashboard/medico" element={
+          <Route path="dashboard/medico" element={
             <ProtectedRoute allowedTypes={['medico']}>
               <MedicoDashboard />
             </ProtectedRoute>
           } />
-          <Route path="/dashboard/admin" element={
+          <Route path="dashboard/admin" element={
             <ProtectedRoute allowedTypes={['admin']}>
               <AdminDashboard />
             </ProtectedRoute>
           } />
           
           {/* Rotas específicas para servidores */}
-          <Route path="/termometro" element={
+          <Route path="termometro" element={
             <ProtectedRoute allowedTypes={['servidor']}>
               <Termometro />
             </ProtectedRoute>
           } />
           
           {/* Rotas específicas para psicólogos e médicos */}
-          <Route path="/pacientes" element={
+          <Route path="pacientes" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico', 'admin']}>
               <Pacientes />
             </ProtectedRoute>
           } />
-          <Route path="/pacientes/novo" element={
+          <Route path="pacientes/novo" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
               <NovosPacientes />
             </ProtectedRoute>
           } />
-          <Route path="/prontuarios" element={
+          <Route path="prontuarios" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
               <Prontuarios />
             </ProtectedRoute>
           } />
-          <Route path="/prontuarios/novo" element={
+          <Route path="prontuarios/novo" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
               <NovoProntuario />
             </ProtectedRoute>
           } />
-          <Route path="/lista-espera" element={
+          <Route path="lista-espera" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
               <ListaEspera />
             </ProtectedRoute>
           } />
-          <Route path="/avaliacoes" element={
+          <Route path="avaliacoes" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico']}>
               <Avaliacoes />
             </ProtectedRoute>
           } />
           
           {/* Rotas específicas para administradores */}
-          <Route path="/usuarios" element={
+          <Route path="usuarios" element={
             <ProtectedRoute allowedTypes={['admin']}>
               <Usuarios />
             </ProtectedRoute>
           } />
-          <Route path="/sistema" element={
+          <Route path="sistema" element={
             <ProtectedRoute allowedTypes={['admin']}>
               <Sistema />
             </ProtectedRoute>
           } />
           
           {/* Rotas compartilhadas (com diferentes níveis de acesso) */}
-          <Route path="/agendamentos" element={
+          <Route path="agendamentos" element={
             <ProtectedRoute>
               <Agendamentos />
             </ProtectedRoute>
           } />
-          <Route path="/agendamentos/novo" element={
+          <Route path="agendamentos/novo" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico', 'admin']}>
               <NovoAgendamento />
             </ProtectedRoute>
           } />
-          <Route path="/relatorios" element={
+          <Route path="relatorios" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico', 'admin']}>
               <Relatorios />
             </ProtectedRoute>
           } />
-          <Route path="/configuracoes" element={
+          <Route path="configuracoes" element={
             <ProtectedRoute allowedTypes={['psicologo', 'medico', 'admin']}>
               <Configuracoes />
             </ProtectedRoute>
           } />
-          
-          <Route path="*" element={<NotFound />} />
         </Route>
+        
+        {/* Rota 404 */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

@@ -10,7 +10,7 @@ const LoginRedirect = () => {
   useEffect(() => {
     if (isAuthenticated && user) {
       // Redirecionar para o dashboard específico do tipo de usuário
-      navigate(`/dashboard/${user.type}`, { replace: true });
+      navigate(`/app/dashboard/${user.type}`, { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 

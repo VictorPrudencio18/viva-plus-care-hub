@@ -99,7 +99,7 @@ const NovosPacientes = () => {
 
   const salvarPaciente = () => {
     console.log('Salvando paciente:', formData);
-    navigate('/pacientes');
+    navigate('/app/pacientes');
   };
 
   const updateFormData = (field: string, value: any) => {
@@ -117,7 +117,7 @@ const NovosPacientes = () => {
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => navigate('/dashboard/psicologo')}>
+          <Button variant="outline" onClick={() => navigate('/app/dashboard/psicologo')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar
           </Button>

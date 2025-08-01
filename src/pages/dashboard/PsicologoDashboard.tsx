@@ -152,7 +152,7 @@ const PsicologoDashboard = () => {
                 </div>
               </div>
             ))}
-            <Button className="w-full mt-4" variant="outline" onClick={() => navigate('/agendamentos')}>
+            <Button className="w-full mt-4" variant="outline" onClick={() => navigate('/app/agendamentos')}>
               Ver Agenda Completa
             </Button>
           </CardContent>
@@ -189,7 +189,7 @@ const PsicologoDashboard = () => {
                 </div>
               </div>
             ))}
-            <Button className="w-full mt-4" variant="outline" onClick={() => navigate('/pacientes')}>
+            <Button className="w-full mt-4" variant="outline" onClick={() => navigate('/app/pacientes')}>
               Ver Todos os Pacientes
             </Button>
           </CardContent>

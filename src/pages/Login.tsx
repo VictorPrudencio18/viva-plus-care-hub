@@ -19,7 +19,7 @@ const Login = () => {
   // Redirecionar se já estiver logado
   useEffect(() => {
     if (isAuthenticated && user) {
-      const from = (location.state as any)?.from?.pathname || `/dashboard/${user.type}`;
+      const from = (location.state as any)?.from?.pathname || `/app/dashboard/${user.type}`;
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, user, navigate, location]);
@@ -30,7 +30,7 @@ const Login = () => {
 
     const success = await login(email, password);
     if (success && user) {
-      const from = (location.state as any)?.from?.pathname || `/dashboard/${user.type}`;
+      const from = (location.state as any)?.from?.pathname || `/app/dashboard/${user.type}`;
       navigate(from, { replace: true });
     }
   };

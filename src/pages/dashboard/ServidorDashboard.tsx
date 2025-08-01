@@ -39,7 +39,7 @@ const ServidorDashboard = () => {
   };
 
   const handleQuestionario = () => {
-    navigate('/termometro');
+    navigate('/app/termometro');
   };
 
   return (

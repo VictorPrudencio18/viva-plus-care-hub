@@ -46,43 +46,43 @@ const Layout = ({ children }: LayoutProps) => {
 
   const getMenuItems = () => {
     const baseItems = [
-      { icon: Home, label: 'Dashboard', path: `/dashboard/${userType}` },
+      { icon: Home, label: 'Dashboard', path: `/app/dashboard/${userType}` },
     ];
 
     switch (userType) {
       case 'servidor':
         return [
           ...baseItems,
-          { icon: Calendar, label: 'Meus Agendamentos', path: '/agendamentos' },
-          { icon: Heart, label: 'Termômetro', path: '/termometro' },
-          { icon: MessageCircle, label: 'Chat Viva', path: '/chat-viva' },
+          { icon: Calendar, label: 'Meus Agendamentos', path: '/app/agendamentos' },
+          { icon: Heart, label: 'Termômetro', path: '/app/termometro' },
+          { icon: MessageCircle, label: 'Chat Viva', path: '/app/chat-viva' },
         ];
       
       case 'psicologo':
       case 'medico':
         return [
           ...baseItems,
-          { icon: Users, label: 'Pacientes', path: '/pacientes' },
-          { icon: UserPlus, label: 'Novo Paciente', path: '/pacientes/novo' },
-          { icon: FileText, label: 'Prontuários', path: '/prontuarios' },
-          { icon: Calendar, label: 'Agendamentos', path: '/agendamentos' },
-          { icon: Clock, label: 'Lista de Espera', path: '/lista-espera' },
-          { icon: CheckSquare, label: 'Avaliações', path: '/avaliacoes' },
-          { icon: BarChart3, label: 'Relatórios', path: '/relatorios' },
-          { icon: MessageCircle, label: 'Chat Viva', path: '/chat-viva' },
-          { icon: Settings, label: 'Configurações', path: '/configuracoes' },
+          { icon: Users, label: 'Pacientes', path: '/app/pacientes' },
+          { icon: UserPlus, label: 'Novo Paciente', path: '/app/pacientes/novo' },
+          { icon: FileText, label: 'Prontuários', path: '/app/prontuarios' },
+          { icon: Calendar, label: 'Agendamentos', path: '/app/agendamentos' },
+          { icon: Clock, label: 'Lista de Espera', path: '/app/lista-espera' },
+          { icon: CheckSquare, label: 'Avaliações', path: '/app/avaliacoes' },
+          { icon: BarChart3, label: 'Relatórios', path: '/app/relatorios' },
+          { icon: MessageCircle, label: 'Chat Viva', path: '/app/chat-viva' },
+          { icon: Settings, label: 'Configurações', path: '/app/configuracoes' },
         ];
       
       case 'admin':
         return [
           ...baseItems,
-          { icon: Users, label: 'Usuários', path: '/usuarios' },
-          { icon: Users, label: 'Pacientes', path: '/pacientes' },
-          { icon: Shield, label: 'Sistema', path: '/sistema' },
-          { icon: BarChart3, label: 'Relatórios', path: '/relatorios' },
-          { icon: Calendar, label: 'Agendamentos', path: '/agendamentos' },
-          { icon: MessageCircle, label: 'Chat Viva', path: '/chat-viva' },
-          { icon: Settings, label: 'Configurações', path: '/configuracoes' },
+          { icon: Users, label: 'Usuários', path: '/app/usuarios' },
+          { icon: Users, label: 'Pacientes', path: '/app/pacientes' },
+          { icon: Shield, label: 'Sistema', path: '/app/sistema' },
+          { icon: BarChart3, label: 'Relatórios', path: '/app/relatorios' },
+          { icon: Calendar, label: 'Agendamentos', path: '/app/agendamentos' },
+          { icon: MessageCircle, label: 'Chat Viva', path: '/app/chat-viva' },
+          { icon: Settings, label: 'Configurações', path: '/app/configuracoes' },
         ];
       
       default:
@@ -165,7 +165,7 @@ const Layout = ({ children }: LayoutProps) => {
             variant="ghost" 
             className="w-full justify-start mb-2" 
             onClick={() => {
-              navigate('/perfil');
+              navigate('/app/perfil');
               setSidebarOpen(false);
             }}
           >
