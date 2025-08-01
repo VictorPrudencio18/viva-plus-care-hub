@@ -47,7 +47,7 @@ const ChatViva = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-180px)]">
         {/* Sidebar de Conversas */}
-        <Card className="lg:col-span-1 flex flex-col overflow-hidden glass-effect border-0 rounded-2xl shadow-xl">
+        <Card className="lg:col-span-1 flex flex-col overflow-hidden card-solid border-0 rounded-2xl shadow-xl">
           <div className="bg-gradient-to-r from-primary/5 to-secondary/5 p-4 border-b">
             <h2 className="font-semibold text-gray-900 flex items-center gap-2">
               <MessageCircle className="w-5 h-5" />
@@ -65,7 +65,7 @@ const ChatViva = () => {
         </Card>
 
         {/* Área Principal do Chat */}
-        <Card className="lg:col-span-2 flex flex-col overflow-hidden glass-effect border-0 rounded-2xl shadow-xl">
+        <Card className="lg:col-span-2 flex flex-col overflow-hidden card-solid border-0 rounded-2xl shadow-xl">
           <ChatInterface />
         </Card>
       </div>

@@ -73,36 +73,36 @@ const Hero = () => {
 
           {/* Enhanced feature cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto mb-12">
-            <Card className="bg-white/10 backdrop-blur-lg p-8 text-center border border-white/20 hover:bg-white/15 hover:scale-105 transition-all duration-300 rounded-3xl shadow-2xl">
+            <Card className="bg-white/90 backdrop-blur-lg p-8 text-center border border-white/20 hover:bg-white/95 hover:scale-105 transition-all duration-300 rounded-3xl shadow-2xl">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Brain className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white mb-3">IA "Viva"</div>
-              <div className="text-white/80 text-lg">Assistente virtual especializada em saúde mental 24/7</div>
+              <div className="text-2xl font-bold text-gray-800 mb-3">IA "Viva"</div>
+              <div className="text-gray-700 text-lg">Assistente virtual especializada em saúde mental 24/7</div>
             </Card>
 
-            <Card className="bg-white/10 backdrop-blur-lg p-8 text-center border border-white/20 hover:bg-white/15 hover:scale-105 transition-all duration-300 rounded-3xl shadow-2xl">
+            <Card className="bg-white/90 backdrop-blur-lg p-8 text-center border border-white/20 hover:bg-white/95 hover:scale-105 transition-all duration-300 rounded-3xl shadow-2xl">
               <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Activity className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white mb-3">Monitoramento</div>
-              <div className="text-white/80 text-lg">Acompanhamento contínuo do bem-estar emocional</div>
+              <div className="text-2xl font-bold text-gray-800 mb-3">Monitoramento</div>
+              <div className="text-gray-700 text-lg">Acompanhamento contínuo do bem-estar emocional</div>
             </Card>
 
-            <Card className="bg-white/10 backdrop-blur-lg p-8 text-center border border-white/20 hover:bg-white/15 hover:scale-105 transition-all duration-300 rounded-3xl shadow-2xl">
+            <Card className="bg-white/90 backdrop-blur-lg p-8 text-center border border-white/20 hover:bg-white/95 hover:scale-105 transition-all duration-300 rounded-3xl shadow-2xl">
               <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Users className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white mb-3">Especialistas</div>
-              <div className="text-white/80 text-lg">Rede de psicólogos e médicos especializados</div>
+              <div className="text-2xl font-bold text-gray-800 mb-3">Especialistas</div>
+              <div className="text-gray-700 text-lg">Rede de psicólogos e médicos especializados</div>
             </Card>
 
-            <Card className="bg-white/10 backdrop-blur-lg p-8 text-center border border-white/20 hover:bg-white/15 hover:scale-105 transition-all duration-300 rounded-3xl shadow-2xl">
+            <Card className="bg-white/90 backdrop-blur-lg p-8 text-center border border-white/20 hover:bg-white/95 hover:scale-105 transition-all duration-300 rounded-3xl shadow-2xl">
               <div className="w-16 h-16 bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Shield className="w-8 h-8 text-white" />
               </div>
-              <div className="text-2xl font-bold text-white mb-3">Segurança</div>
-              <div className="text-white/80 text-lg">Dados protegidos com máxima privacidade</div>
+              <div className="text-2xl font-bold text-gray-800 mb-3">Segurança</div>
+              <div className="text-gray-700 text-lg">Dados protegidos com máxima privacidade</div>
             </Card>
           </div>
 

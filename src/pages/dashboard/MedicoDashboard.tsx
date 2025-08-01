@@ -44,7 +44,7 @@ const MedicoDashboard = () => {
 
       {/* Métricas Modernizadas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="glass-effect border-0 rounded-2xl shadow-2xl hover-lift">
+        <Card className="glass-subtle border-0 rounded-2xl shadow-2xl hover-lift">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-700">Pacientes do Dia</CardTitle>
             <div className="p-2 rounded-lg bg-gradient-to-r from-blue-400 to-blue-600">
@@ -59,7 +59,7 @@ const MedicoDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="glass-effect border-0 rounded-2xl shadow-2xl hover-lift">
+        <Card className="glass-subtle border-0 rounded-2xl shadow-2xl hover-lift">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-700">Consultas Restantes</CardTitle>
             <div className="p-2 rounded-lg bg-gradient-to-r from-green-400 to-green-600">
@@ -74,7 +74,7 @@ const MedicoDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="glass-effect border-0 rounded-2xl shadow-2xl hover-lift">
+        <Card className="glass-subtle border-0 rounded-2xl shadow-2xl hover-lift">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-700">Exames Pendentes</CardTitle>
             <div className="p-2 rounded-lg bg-gradient-to-r from-purple-400 to-purple-600">
@@ -89,7 +89,7 @@ const MedicoDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="glass-effect border-0 rounded-2xl shadow-2xl hover-lift">
+        <Card className="glass-subtle border-0 rounded-2xl shadow-2xl hover-lift">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-700">Telemedicina</CardTitle>
             <div className="p-2 rounded-lg bg-gradient-to-r from-pink-400 to-pink-600">
@@ -107,7 +107,7 @@ const MedicoDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Consultas do Dia */}
-        <Card className="glass-effect border-0 rounded-3xl shadow-2xl">
+        <Card className="glass-subtle border-0 rounded-3xl shadow-2xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-xl font-bold text-gray-800">
               <div className="p-2 rounded-lg bg-gradient-secondary">
@@ -143,7 +143,7 @@ const MedicoDashboard = () => {
         </Card>
 
         {/* Exames Pendentes */}
-        <Card className="glass-effect border-0 rounded-3xl shadow-2xl">
+        <Card className="glass-subtle border-0 rounded-3xl shadow-2xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-xl font-bold text-gray-800">
               <div className="p-2 rounded-lg bg-gradient-to-r from-purple-400 to-purple-600">
@@ -177,7 +177,7 @@ const MedicoDashboard = () => {
       </div>
 
       {/* Ações Rápidas Modernizadas */}
-      <Card className="glass-effect border-0 rounded-3xl shadow-2xl">
+      <Card className="glass-subtle border-0 rounded-3xl shadow-2xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-3 text-2xl font-bold text-gray-800">
             <Sparkles className="w-7 h-7 text-blue-500" />
