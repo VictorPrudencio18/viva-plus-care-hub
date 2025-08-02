@@ -394,7 +394,7 @@ const MedicalRecordsDashboard = () => {
 
       {/* Link to Reports */}
       <div className="flex justify-end">
-        <Link to="/relatorios">
+        <Link to="/app/relatorios">
           <Button variant="outline" className="flex items-center gap-2">
             <FileText className="w-4 h-4" />
             Ver Relatórios Gerenciais

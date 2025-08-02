@@ -27,42 +27,42 @@ const PsicologoDashboard = () => {
       descricao: "Criar prontuário para novo paciente",
       icone: FileText,
       cor: "bg-blue-600 hover:bg-blue-700",
-      rota: "/prontuarios/novo"
+      rota: "/app/prontuarios/novo"
     },
     {
       titulo: "Agendar Consulta",
       descricao: "Agendar nova consulta ou retorno",
       icone: CalendarPlus,
       cor: "bg-green-600 hover:bg-green-700",
-      rota: "/agendamentos/novo"
+      rota: "/app/agendamentos/novo"
     },
     {
       titulo: "Lista de Espera",
       descricao: "Gerenciar pacientes em espera",
       icone: Users,
       cor: "bg-purple-600 hover:bg-purple-700",
-      rota: "/lista-espera"
+      rota: "/app/lista-espera"
     },
     {
       titulo: "Relatórios",
       descricao: "Gerar relatórios e estatísticas",
       icone: BarChart3,
       cor: "bg-orange-600 hover:bg-orange-700",
-      rota: "/relatorios"
+      rota: "/app/relatorios"
     },
     {
       titulo: "Avaliação Rápida",
       descricao: "Aplicar escalas e questionários",
       icone: ClipboardList,
       cor: "bg-teal-600 hover:bg-teal-700",
-      rota: "/avaliacoes"
+      rota: "/app/avaliacoes"
     },
     {
       titulo: "Cadastro Paciente",
       descricao: "Cadastrar novo paciente no sistema",
       icone: UserPlus,
       cor: "bg-indigo-600 hover:bg-indigo-700",
-      rota: "/pacientes/novo"
+      rota: "/app/pacientes/novo"
     }
   ];
 
