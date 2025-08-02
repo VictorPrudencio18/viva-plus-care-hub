@@ -152,7 +152,10 @@ const MedicalRecordsDashboard = () => {
           <h1 className="text-2xl font-bold text-gray-900">Sistema de Prontuários</h1>
           <p className="text-gray-600">Gerencie prontuários médicos e psicológicos</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => window.location.href = '/app/prontuarios/novo'}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Novo Prontuário
         </Button>

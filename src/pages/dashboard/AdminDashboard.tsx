@@ -194,15 +194,26 @@ const AdminDashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Button className="h-20 flex flex-col gap-2">
+            <Button 
+              className="h-20 flex flex-col gap-2"
+              onClick={() => window.location.href = '/app/usuarios'}
+            >
               <Users className="w-6 h-6" />
               Gerenciar Usuários
             </Button>
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
+            <Button 
+              className="h-20 flex flex-col gap-2" 
+              variant="outline"
+              onClick={() => window.location.href = '/app/relatorios'}
+            >
               <FileText className="w-6 h-6" />
               Relatórios
             </Button>
-            <Button className="h-20 flex flex-col gap-2" variant="outline">
+            <Button 
+              className="h-20 flex flex-col gap-2" 
+              variant="outline"
+              onClick={() => window.location.href = '/app/configuracoes'}
+            >
               <Settings className="w-6 h-6" />
               Configurações
             </Button>

@@ -136,7 +136,10 @@ const MedicoDashboard = () => {
                 </div>
               </div>
             ))}
-            <Button className="w-full mt-6 bg-gradient-primary hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-xl py-3">
+            <Button 
+              className="w-full mt-6 bg-gradient-primary hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-xl py-3"
+              onClick={() => window.location.href = '/app/agendamentos'}
+            >
               Ver Agenda Completa
             </Button>
           </CardContent>
@@ -197,11 +200,17 @@ const MedicoDashboard = () => {
               <Activity className="w-8 h-8" />
               <span className="font-semibold">Solicitar Exame</span>
             </Button>
-            <Button className="h-24 flex flex-col gap-3 bg-gradient-to-r from-purple-400 to-purple-600 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 rounded-2xl">
+            <Button 
+              className="h-24 flex flex-col gap-3 bg-gradient-to-r from-purple-400 to-purple-600 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 rounded-2xl"
+              onClick={() => window.location.href = '/app/chat-viva'}
+            >
               <Brain className="w-8 h-8" />
               <span className="font-semibold">Teleconsulta</span>
             </Button>
-            <Button className="h-24 flex flex-col gap-3 bg-gradient-to-r from-pink-400 to-pink-600 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 rounded-2xl">
+            <Button 
+              className="h-24 flex flex-col gap-3 bg-gradient-to-r from-pink-400 to-pink-600 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 rounded-2xl"
+              onClick={() => window.location.href = '/app/pacientes'}
+            >
               <Users className="w-8 h-8" />
               <span className="font-semibold">Lista Pacientes</span>
             </Button>
